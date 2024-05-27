@@ -15,21 +15,16 @@ NAME	=	opengl_test
 all	: $(NAME)
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.cpp
-	@mkdir -p $(OBJDIR)
-	@echo "Compiling $< into $@"
-	$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Done"
+	@echo "Compiling $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(OBJDIR)/%.o : $(SRCDIR)/%.c
-	@mkdir -p $(OBJDIR)
-	@echo "Compiling $< into $@"
-	$(CC) $(CFLAGS) -c $< -o $@
-	@echo "Done"
+	@echo "Compiling $<"
+	@$(CC) $(CFLAGS) -c $< -o $@
 
 $(NAME)	: $(OBJ) Makefile
 	@echo "Linking $@"
-	$(CC) $(CFLAGS) $(LIBFLAGS) $(OBJ) -o $(NAME)
-	@echo "Done"
+	@$(CC) $(CFLAGS) $(LIBFLAGS) $(OBJ) -o $(NAME)
 
 clean	:	
 	rm -f $(OBJ) $(DEPENDS)

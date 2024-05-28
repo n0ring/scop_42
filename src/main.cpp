@@ -5,6 +5,16 @@
 #include <sstream>
 #include <math.h>
 #include <vector> 
+#include "VertexBuffer.hpp"
+#include "IndexBuffer.hpp"
+#include "VertexArray.hpp"
+
+
+// #define ASSERT(x) if (!(x)) __debugbreak();
+// #define GLCall(x) clearError();\
+// 	x;\
+// 	ASSERT(checkError(#x, __FILE__, __LINE__))
+
 
 
 // static void clearError()
@@ -122,6 +132,7 @@ static unsigned int createShader(const std::string& vertexShader, const std::str
 int main(void)
 {
 	GLFWwindow* window;
+	
 
 	/* Initialize the library */
 	if (!glfwInit())
@@ -148,9 +159,6 @@ int main(void)
 		return -1;
 	}
 	std::cout << glGetString(GL_VERSION) << std::endl;
-	int attrs;
-	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &attrs);
-	std::cout << attrs << " attributes on gl\n";
 
 	float positions[] = {
 		-0.5f, -0.5f,
@@ -163,27 +171,16 @@ int main(void)
 		0, 1, 2, 
 		3, 2, 0
 	};
-	// here is the problem 
-	GLuint vao; // vertex array object
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-	// was
 
-	unsigned int vbo; // vertex buffer object
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 8, positions, GL_STATIC_DRAW);
+	VertexArray va;
+	VertexBuffer vb(positions, 8 * sizeof(float));
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // 0 is the index of the vertex attribute
-	glEnableVertexAttribArray(0);
+	VertexBufferLayout layouts;
+	layouts.push<float>(2);
+	va.addBuffer(vb, layouts);
 
-
-
-	unsigned int ibo; // index buffer object
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indecies, GL_STATIC_DRAW);
-
+// glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // 0 is the index of the vertex attribute
+	IndexBuffer ib(indecies, 6);
 	ShaderProgramSourse source;
 
 	source = parseShader("res/shaders/Basic.shader");
@@ -198,7 +195,7 @@ int main(void)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
  
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_LINE
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -211,7 +208,8 @@ int main(void)
 		glUseProgram(shader);
 		glUniform4f(colors, red, 0.0f, 0.8f, 1.0f);
 
-		glBindVertexArray(vao);
+		va.bind();
+		ib.bind();
 		
 
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
@@ -228,8 +226,8 @@ int main(void)
 	}
 
 	glDeleteProgram(shader);
-	glDeleteBuffers(1, &vbo);
+	// glDeleteBuffers(1, &vbo);
 	glfwTerminate();
-	glDeleteVertexArrays(1, &vao);
+	// glDeleteVertexArrays(1, &vao);
 	return 0;
 }

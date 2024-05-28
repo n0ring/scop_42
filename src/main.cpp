@@ -3,6 +3,22 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <math.h>
+
+
+static void clearError()
+{
+	while (glGetError() != GL_NO_ERROR);
+}
+
+static void checkError()
+{
+	while (GLenum error = glGetError())
+	{
+		std::cout << "[OpenGL Error] (" << error << ")" << std::endl;
+	}
+}
+
 
 
 struct ShaderProgramSourse
@@ -70,6 +86,7 @@ static unsigned int compileShader(unsigned int type, const std::string source)
 
 static unsigned int createShader(const std::string& vertexShader, const std::string& fragmentShader)
 {
+	int linkResult;
 	unsigned int program = glCreateProgram();
 	unsigned int vs = compileShader(GL_VERTEX_SHADER, vertexShader);
 	unsigned int fs = compileShader(GL_FRAGMENT_SHADER , fragmentShader);
@@ -77,6 +94,21 @@ static unsigned int createShader(const std::string& vertexShader, const std::str
 	glAttachShader(program, vs);
 	glAttachShader(program, fs);
 	glLinkProgram(program);
+
+	glGetProgramiv(program, GL_LINK_STATUS, &linkResult);
+	if (linkResult == GL_FALSE)
+	{
+		int length;
+		glGetProgramiv(program, GL_INFO_LOG_LENGTH, &length);
+		char *message = (char*)alloca(length * sizeof(char));
+		glGetProgramInfoLog(program, length, &length, message);
+		std::cout << "Failed to link the shader program!" << std::endl;
+		std::cout << message << std::endl;
+		glDeleteProgram(program);
+		return 0;
+	}
+
+
 	glValidateProgram(program);
 
 	glDeleteShader(vs);
@@ -113,36 +145,53 @@ int main(void)
 		return -1;
 	}
 	std::cout << glGetString(GL_VERSION) << std::endl;
+	int attrs;
+	glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &attrs);
+	std::cout << attrs << " attributes on gl\n";
 
-	float positions[6] = {
-		-0.5f, -0.5f,
-		0.0f,  0.5f,
-		0.5f, -0.5f
+	float positions[] = {
+		-0.5f, -0.5f, 1.0f, 0.0f, 0.0f, // 0
+		0.5f, -0.5f, 0.0f, 1.0f, 0.0f,// 1
+		0.5f,  0.5f, 0.0f, 0.0f, 1.0f,// 2
+		-0.5f, 0.5f, 1.0f, 1.0f, 1.0f,// 3
 	};
 
+	unsigned int indecies[] = {
+		0, 1, 2, 
+		3, 2, 0
+	};
 	// here is the problem 
-	GLuint vao;
+	GLuint vao; // vertex array object
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 	// was
 
-	GLuint buffer;
-	glGenBuffers(1, &buffer);
-	glBindBuffer(GL_ARRAY_BUFFER, buffer);
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(float), positions, GL_STATIC_DRAW);
+	unsigned int vbo; // vertex buffer object
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 20, positions, GL_STATIC_DRAW);
 
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, 0); // 0 is the index of the vertex attribute
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 5, 0); // 0 is the index of the vertex attribute
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, sizeof(float) * 5, (void*) (2 * sizeof(float))); // 0 is the index of the vertex attribute
+	glEnableVertexAttribArray(1);
+
+
+	unsigned int ibo; // index buffer object
+	glGenBuffers(1, &ibo);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), indecies, GL_STATIC_DRAW);
 
 	ShaderProgramSourse source;
 
 	source = parseShader("res/shaders/Basic.shader");
-	// std::cout << source.vertexSource << std::endl;
-	// std::cout << source.fragmentSource << std::endl;
-	// return 0;
-
 	unsigned int shader = createShader(source.vertexSource, source.fragmentSource);
+
 	glUseProgram(shader);
+
+ 
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_LINE
 
 	/* Loop until the user closes the window */
 	while (!glfwWindowShouldClose(window))
@@ -151,7 +200,15 @@ int main(void)
 		/* Render here */
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glDrawArrays(GL_TRIANGLES, 0, 3);
+		glBindVertexArray(vao);
+
+	// float timeValue = glfwGetTime();
+	// float greenValue = (sin(timeValue) / 2.0f) + 0.5f;
+	// glUniform4f(vertexUniformLocation, 0.0f, greenValue, 0.8f, 1.0f);
+
+		clearError();
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, nullptr);
+		checkError();
 		/* Swap front and back buffers */
 		glfwSwapBuffers(window);
 
@@ -160,7 +217,7 @@ int main(void)
 	}
 
 	glDeleteProgram(shader);
-	glDeleteBuffers(1, &buffer);
+	glDeleteBuffers(1, &vbo);
 	glfwTerminate();
 	glDeleteVertexArrays(1, &vao);
 	return 0;

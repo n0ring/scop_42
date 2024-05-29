@@ -1,9 +1,10 @@
 SRC		=	$(addprefix src/,	main.cpp\
 								glad.c\
-								Render.cpp\
+								Renderer.cpp\
 								VertexBuffer.cpp\
 								IndexBuffer.cpp\
 								VertexArray.cpp\
+								Shader.cpp\
 								)
 OBJDIR	=	obj
 SRCDIR	=	src

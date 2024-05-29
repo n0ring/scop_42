@@ -1,6 +1,5 @@
 obj/VertexArray.o: src/VertexArray.cpp include/VertexArray.hpp \
-  include/VertexBuffer.hpp include/Render.hpp include/glad/glad.h \
-  include/KHR/khrplatform.h \
+  include/glad/glad.h include/KHR/khrplatform.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/stdint.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config_site \
@@ -37,7 +36,7 @@ obj/VertexArray.o: src/VertexArray.cpp include/VertexArray.hpp \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/include/stddef.h \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/include/__stddef_max_align_t.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__nullptr \
-  include/VertexBufferLayout.hpp \
+  include/VertexBuffer.hpp include/VertexBufferLayout.hpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/vector \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__bit_reference \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__bits \
@@ -354,10 +353,6 @@ obj/VertexArray.o: src/VertexArray.cpp include/VertexArray.hpp \
 
 include/VertexArray.hpp:
 
-include/VertexBuffer.hpp:
-
-include/Render.hpp:
-
 include/glad/glad.h:
 
 include/KHR/khrplatform.h:
@@ -433,6 +428,8 @@ include/GLFW/glfw3.h:
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/include/__stddef_max_align_t.h:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__nullptr:
+
+include/VertexBuffer.hpp:
 
 include/VertexBufferLayout.hpp:
 

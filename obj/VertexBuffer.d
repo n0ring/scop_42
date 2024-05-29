@@ -1,5 +1,5 @@
 obj/VertexBuffer.o: src/VertexBuffer.cpp include/VertexBuffer.hpp \
-  include/Render.hpp include/glad/glad.h include/KHR/khrplatform.h \
+  include/glad/glad.h include/KHR/khrplatform.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/stdint.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config_site \
@@ -38,8 +38,6 @@ obj/VertexBuffer.o: src/VertexBuffer.cpp include/VertexBuffer.hpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__nullptr
 
 include/VertexBuffer.hpp:
-
-include/Render.hpp:
 
 include/glad/glad.h:
 

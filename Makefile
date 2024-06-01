@@ -5,6 +5,8 @@ SRC		=	$(addprefix src/,	main.cpp\
 								IndexBuffer.cpp\
 								VertexArray.cpp\
 								Shader.cpp\
+								stb_image.cpp\
+								Texture.cpp\
 								)
 OBJDIR	=	obj
 SRCDIR	=	src

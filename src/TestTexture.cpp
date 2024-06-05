@@ -17,7 +17,7 @@ namespace test
 
 		std::vector<unsigned int> indeces = {
 			0, 1, 2,
-			0, 2, };
+			0, 2, 3};
 
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glEnable(GL_BLEND);

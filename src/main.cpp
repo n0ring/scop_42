@@ -131,10 +131,10 @@ int main(void)
 	test::Test* currentTest  = nullptr;
 	test::TestMenu* testMenu = new test::TestMenu(currentTest);
 
-	// currentTest = testMenu; 
+	currentTest = testMenu; 
 
-	// testMenu->registerTest<test::TestClearColor>("Clear color");
-	// testMenu->registerTest<test::TestTexture>("Texture");
+	testMenu->registerTest<test::TestClearColor>("Clear color");
+	testMenu->registerTest<test::TestTexture>("Texture");
 	
 	test::TestTexture test;
 
@@ -148,23 +148,20 @@ int main(void)
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-		test.onUpdate(0.0f);
-		test.onRender();
-		test.onImGuiRender();
 // frame 
-		// if (currentTest)
-		// {
-		// 	currentTest->onUpdate(0.0f);
-		// 	currentTest->onRender();
-		// 	ImGui::Begin("Test");
-		// 	if (currentTest != testMenu && ImGui::Button("<-"))
-		// 	{
-		// 		delete currentTest;
-		// 		currentTest = testMenu;
-		// 	}
-		// 	currentTest->onImGuiRender(); 
-		// 	ImGui::End();
-		// }
+		if (currentTest)
+		{
+			currentTest->onUpdate(0.0f);
+			currentTest->onRender();
+			ImGui::Begin("Test");
+			if (currentTest != testMenu && ImGui::Button("<-"))
+			{
+				delete currentTest;
+				currentTest = testMenu;
+			}
+			currentTest->onImGuiRender(); 
+			ImGui::End();
+		}
 // frame
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

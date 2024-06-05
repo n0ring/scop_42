@@ -563,9 +563,9 @@ obj/main.o: src/main.cpp include/imgui/imgui.h include/imgui/imconfig.h \
   include/Renderer.hpp include/Texture.hpp \
   include/vendor/stb_image/stb_image.h include/BmpLoader.hpp \
   include/test/TestClearColor.hpp include/test/Test.hpp \
-  include/glm/gtc/matrix_transform.hpp include/glm/gtc/../mat4x4.hpp \
-  include/glm/gtc/../vec2.hpp include/glm/gtc/../vec3.hpp \
-  include/glm/gtc/../vec4.hpp \
+  include/test/TestTexture.hpp include/glm/gtc/matrix_transform.hpp \
+  include/glm/gtc/../mat4x4.hpp include/glm/gtc/../vec2.hpp \
+  include/glm/gtc/../vec3.hpp include/glm/gtc/../vec4.hpp \
   include/glm/gtc/../ext/matrix_projection.hpp \
   include/glm/./ext/../gtc/constants.hpp \
   include/glm/gtc/../ext/scalar_constants.hpp \
@@ -1782,6 +1782,8 @@ include/BmpLoader.hpp:
 include/test/TestClearColor.hpp:
 
 include/test/Test.hpp:
+
+include/test/TestTexture.hpp:
 
 include/glm/gtc/matrix_transform.hpp:
 

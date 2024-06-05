@@ -16,6 +16,8 @@ SRC		=	$(addprefix src/,	main.cpp\
 								imgui_impl_opengl3.cpp\
 								\
 								TestClearColor.cpp\
+								Test.cpp\
+								TestTexture.cpp\
 								)
 OBJDIR	=	obj
 SRCDIR	=	src

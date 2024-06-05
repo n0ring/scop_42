@@ -16,6 +16,8 @@
 #include "Renderer.hpp"
 #include "Texture.hpp"
 #include "test/TestClearColor.hpp"
+#include "test/TestTexture.hpp"
+
 
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
@@ -107,7 +109,6 @@ int main(void)
 
 	Renderer renderer;
 
-
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -124,25 +125,47 @@ int main(void)
     const char* glsl_version = "#version 150";
     ImGui_ImplOpenGL3_Init(glsl_version);
 
-	glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE
+	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE
+	
 
-	test::TestClearColor test;
+	test::Test* currentTest  = nullptr;
+	test::TestMenu* testMenu = new test::TestMenu(currentTest);
+
+	// currentTest = testMenu; 
+
+	// testMenu->registerTest<test::TestClearColor>("Clear color");
+	// testMenu->registerTest<test::TestTexture>("Texture");
+	
+	test::TestTexture test;
+
 	while (!glfwWindowShouldClose(window))
 	{
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		renderer.clear();
-
-		test.onRender();
-		test.onUpdate(0.0f);
-
 
 		// Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
+		test.onUpdate(0.0f);
+		test.onRender();
 		test.onImGuiRender();
- 
-
+// frame 
+		// if (currentTest)
+		// {
+		// 	currentTest->onUpdate(0.0f);
+		// 	currentTest->onRender();
+		// 	ImGui::Begin("Test");
+		// 	if (currentTest != testMenu && ImGui::Button("<-"))
+		// 	{
+		// 		delete currentTest;
+		// 		currentTest = testMenu;
+		// 	}
+		// 	currentTest->onImGuiRender(); 
+		// 	ImGui::End();
+		// }
+// frame
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		
@@ -155,9 +178,12 @@ int main(void)
 	// glDeleteProgram(shader);
 	// glDeleteBuffers(1, &vbo);
 
-	    ImGui_ImplOpenGL3_Shutdown();
+	ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
+	// delete currentTest;
+	// if (currentTest != testMenu)
+	// 	delete testMenu;
 
 	glfwTerminate();
 	// glDeleteVertexArrays(1, &vao);

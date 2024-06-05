@@ -1,5 +1,4 @@
-obj/TestClearColor.o: src/TestClearColor.cpp \
-  include/test/TestClearColor.hpp include/test/Test.hpp \
+obj/Test.o: src/Test.cpp include/test/Test.hpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/vector \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config_site \
@@ -420,8 +419,6 @@ obj/TestClearColor.o: src/TestClearColor.cpp \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/include/float.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/float.h \
   include/glad/glad.h include/KHR/khrplatform.h include/GLFW/glfw3.h
-
-include/test/TestClearColor.hpp:
 
 include/test/Test.hpp:
 

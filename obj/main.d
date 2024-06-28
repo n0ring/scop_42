@@ -580,7 +580,8 @@ obj/main.o: src/main.cpp include/imgui/imgui.h include/imgui/imconfig.h \
   include/glm/./ext/matrix_transform.inl \
   include/glm/gtc/matrix_transform.inl include/glm/gtc/../geometric.hpp \
   include/glm/gtc/../trigonometric.hpp include/glm/gtc/../matrix.hpp \
-  include/ParsedObject.hpp include/ObjectRenderer.hpp
+  include/ParsedObject.hpp include/ObjectRenderer.hpp \
+  include/KeyboardManager.hpp
 
 include/imgui/imgui.h:
 
@@ -1835,3 +1836,5 @@ include/glm/gtc/../matrix.hpp:
 include/ParsedObject.hpp:
 
 include/ObjectRenderer.hpp:
+
+include/KeyboardManager.hpp:

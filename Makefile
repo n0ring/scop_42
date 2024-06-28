@@ -16,6 +16,7 @@ SRC		=	$(addprefix src/,	main.cpp\
 								imgui_impl_opengl3.cpp\
 								ParsedObject.cpp\
 								ObjectRenderer.cpp\
+								KeyboardManager.cpp\
 								)
 OBJDIR	=	obj
 SRCDIR	=	src

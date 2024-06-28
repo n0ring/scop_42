@@ -25,7 +25,7 @@ ObjectRenderer::ObjectRenderer(const ParsedObject& parsedObject)
 	m_shader->setUniform1i("u_Texture", 0);
 }
 
-void ObjectRenderer::onRender()
+void ObjectRenderer::onRender(ModelState& modeState)
 {
 	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -34,8 +34,8 @@ void ObjectRenderer::onRender()
 	m_texture->bind();
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translation);
 	// glm::mat4 model = glm::mat4(1.0f);
-	model = glm::rotate(model, glm::radians(m_rotation_x), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(m_rotation_y), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(modeState.rotation_x), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::rotate(model, glm::radians(modeState.rotation_y), glm::vec3(1.0f, 0.0f, 0.0f));
 	m_view = glm::translate(glm::mat4(1.0f), view_vec);
 	glm::mat4 mvp = m_proj * m_view * model;
 	m_shader->bind();
@@ -47,10 +47,10 @@ void ObjectRenderer::onRender()
 
 void ObjectRenderer::onImGuiRender(int& fill)
 {
-	ImGui::SliderFloat3("translationA", &m_translation.x, 0.0f, 10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::SliderFloat3("view", &view_vec.x, 0.0f, 10.0f);				// Edit 1 float using a slider from 0.0f to 1.0f
-	ImGui::SliderFloat("rotate x", &m_rotation_x, 0.0f, 360.0f);
-	ImGui::SliderFloat("rotate y", &m_rotation_y, 0.0f, 360.0f);
+	// ImGui::SliderFloat3("translationA", &m_translation.x, 0.0f, 10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+	// ImGui::SliderFloat3("view", &view_vec.x, 0.0f, 10.0f);				// Edit 1 float using a slider from 0.0f to 1.0f
+	// ImGui::SliderFloat("rotate x", &m_rotation_x, 0.0f, 360.0f);
+	// ImGui::SliderFloat("rotate y", &m_rotation_y, 0.0f, 360.0f);
 	if (ImGui::Button("Fill"))
 	{
 		fill = fill ? 0 : 1;

@@ -25,13 +25,14 @@
 #include "ParsedObject.hpp"
 #include "ObjectRenderer.hpp"
 
+#include "KeyboardManager.hpp"
+
+ModelState g_modelState;
+KeyboardManager keyboardManager;
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-    if (action == GLFW_PRESS) {
-        std::cout << "Key pressed: " << key << std::endl;
-    } else if (action == GLFW_RELEASE) {
-        std::cout << "Key released: " << key << std::endl;
-    }
+	keyboardManager.setKeyState(key, action);
 }
 
 
@@ -40,6 +41,7 @@ int main(void)
 	GLFWwindow *window;
 
 	ParsedObject parsedObject("teapot2.obj");
+	// ParsedObject parsedObject("teapot.obj");
 	// ParsedObject parsedObject("42.obj");
 
 
@@ -73,13 +75,14 @@ int main(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 	glEnable(GL_BLEND);
 
-	Renderer renderer;
-	ObjectRenderer objectRenderer(parsedObject);
+	Renderer renderer; 
+	ObjectRenderer objectRenderer(parsedObject); // model states 
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO& io = ImGui::GetIO(); 
+	(void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 
@@ -104,8 +107,9 @@ int main(void)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
+		keyboardManager.update(g_modelState);
 
-		objectRenderer.onRender();
+		objectRenderer.onRender(g_modelState);
 // frame
 		objectRenderer.onImGuiRender(fill);
 // frame

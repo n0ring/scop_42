@@ -16,13 +16,46 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
+#define MOVE_STEP 1.0f
+
+struct ModelState
+{
+	float rotation_x = 0.0f;
+	float rotation_y = 0.0f;
+
+	void moveUp()
+	{
+		rotation_y -= MOVE_STEP;
+		if (rotation_y >= 360)
+			rotation_y = 0;
+	}
+	void moveDown()
+	{
+		rotation_y += MOVE_STEP;
+		if (rotation_y >= 360)
+			rotation_y = 0;
+	}
+	void moveLeft()
+	{
+		rotation_x -= MOVE_STEP;
+		if (rotation_y >= 360)
+			rotation_y = 0;
+	}
+	void moveRight()
+	{
+		rotation_x += MOVE_STEP;
+		if (rotation_y >= 360)
+			rotation_y = 0;
+	}
+};
+
 class ObjectRenderer
 {
 public:
 	ObjectRenderer(const ParsedObject &parsedObject);
 	~ObjectRenderer() {}
 	void onUpdate(float deltaTime);
-	void onRender();
+	void onRender(ModelState&);
 	void onImGuiRender(int& fill);
 
 
@@ -37,8 +70,4 @@ private:
 	glm::mat4 m_proj, m_view;
 
 	glm::vec3 view_vec;
-
-	float m_rotation_x = 0.0f;
-	float m_rotation_y = 0.0f;
-
 };

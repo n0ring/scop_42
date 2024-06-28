@@ -33,8 +33,6 @@ namespace test
 
 		m_shader->bind();
 
-
-
 		m_texture = std::make_unique<Texture>("res/texture/texture.png");
 		m_texture->bind();
 		m_shader->setUniform1i("u_Texture", 0);

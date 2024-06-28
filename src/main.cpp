@@ -22,60 +22,26 @@
 #include "glm/glm.hpp"
 #include "glm/gtc/matrix_transform.hpp"
 
- 
-void split(std::string& line, std::vector<std::string>& words)
+#include "ParsedObject.hpp"
+#include "ObjectRenderer.hpp"
+
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
-	std::string word;
-	std::stringstream ss(line);
-	words.clear();
-	while (ss >> word)
-	{
-		words.push_back(word);
-	}
+    if (action == GLFW_PRESS) {
+        std::cout << "Key pressed: " << key << std::endl;
+    } else if (action == GLFW_RELEASE) {
+        std::cout << "Key released: " << key << std::endl;
+    }
 }
 
-bool parseFile(const std::string& fileName, std::vector<float>& pos, std::vector<unsigned int>& idx)
-{
-	(void) pos;
-	(void) idx;
-
-	std::string line;
-	std::ifstream file(fileName);
-	std::vector<std::string> words;
-
-	if (file.is_open() == false)
-		return false;
-	
-	while (getline(file, line))
-	{
-		if (line[0] == 'v' || line[0] == 'f')
-		{
-			split(line, words);
-			if (words[0] == "v")
-			{
-				pos.push_back(std::stof(words[1]));
-				pos.push_back(std::stof(words[2]));
-				pos.push_back(std::stof(words[3]));
-			}
-			if (words[0] == "f")
-			{
-				idx.push_back(std::stoi(words[1]));
-				idx.push_back(std::stoi(words[2]));
-				idx.push_back(std::stoi(words[3]));
-			}
-		}
-	}
-	std::cout << pos.size() << " " << idx.size() << std::endl;
-	return true;
-}
 
 int main(void)
 {
-	// std::vector<float> pos;
-	// std::vector<unsigned int> idx;
-	// parseFile("test.obj", pos, idx);
-	/////
 	GLFWwindow *window;
+
+	ParsedObject parsedObject("teapot2.obj");
+	// ParsedObject parsedObject("42.obj");
+
 
 	/* Initialize the library */
 	if (!glfwInit())
@@ -87,7 +53,7 @@ int main(void)
 	glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE); // Necessary on Mac
 
 	/* Create a windowed mode window and its OpenGL context */
-	window = glfwCreateWindow(960, 540, "Hello World", NULL, NULL);
+	window = glfwCreateWindow(960, 540, "scop_42", NULL, NULL);
 	if (!window)
 	{
 		glfwTerminate();
@@ -108,6 +74,7 @@ int main(void)
 	glEnable(GL_BLEND);
 
 	Renderer renderer;
+	ObjectRenderer objectRenderer(parsedObject);
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -124,45 +91,28 @@ int main(void)
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     const char* glsl_version = "#version 150";
     ImGui_ImplOpenGL3_Init(glsl_version);
-
-	// glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE
 	
-
-	test::Test* currentTest  = nullptr;
-	test::TestMenu* testMenu = new test::TestMenu(currentTest);
-
-	currentTest = testMenu; 
-
-	testMenu->registerTest<test::TestClearColor>("Clear color");
-	testMenu->registerTest<test::TestTexture>("Texture");
-	
-	test::TestTexture test;
-
+	int fill = 0;
+	glfwSetKeyCallback(window, key_callback);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		renderer.clear();
+
 
 		// Start the Dear ImGui frame
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
 
-// frame 
-		if (currentTest)
-		{
-			currentTest->onUpdate(0.0f);
-			currentTest->onRender();
-			ImGui::Begin("Test");
-			if (currentTest != testMenu && ImGui::Button("<-"))
-			{
-				delete currentTest;
-				currentTest = testMenu;
-			}
-			currentTest->onImGuiRender(); 
-			ImGui::End();
-		}
+		objectRenderer.onRender();
 // frame
+		objectRenderer.onImGuiRender(fill);
+// frame
+		if (fill)
+			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); // GL_LINE
+		else 
+			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		

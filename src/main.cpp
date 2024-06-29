@@ -41,8 +41,8 @@ int main(void)
 	GLFWwindow *window;
 
 	// ParsedObject parsedObject("cube.obj");
-	ParsedObject parsedObject("teapot2.obj");
-	// ParsedObject parsedObject("teapot.obj");
+	// ParsedObject parsedObject("teapot2.obj");
+	ParsedObject parsedObject("teapot.obj");
 	// ParsedObject parsedObject("42.obj");
 
 
@@ -98,6 +98,9 @@ int main(void)
 	
 	int fill = 0;
 	glfwSetKeyCallback(window, key_callback);
+		glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
@@ -115,7 +118,7 @@ int main(void)
 		objectRenderer.onImGuiRender(fill);
 // frame
 		if (fill)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_POINT); // GL_LINE
+			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_LINE
 		else 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE
         ImGui::Render();

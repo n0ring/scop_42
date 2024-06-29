@@ -11,7 +11,10 @@ ObjectRenderer::ObjectRenderer(const ParsedObject& parsedObject)
 	m_VAO = std::make_unique<VertexArray>();
 	m_VBO = std::make_unique<VertexBuffer>(parsedObject.getPositions().data(), parsedObject.getPositions().size() * sizeof(float));
 	VertexBufferLayout layouts;
-	layouts.push<float>(3);
+	layouts.push<float>(3); // size of data 
+	// layouts.push<float>(3); // colors 
+	// add color layout
+	// add texture layout
 	// layouts.push<float>(2);
 	m_VAO->addBuffer(*m_VBO, layouts);
 	m_IBO = std::make_unique<IndexBuffer>(parsedObject.getIndices().data(), parsedObject.getIndices().size());
@@ -27,9 +30,10 @@ ObjectRenderer::ObjectRenderer(const ParsedObject& parsedObject)
 
 void ObjectRenderer::onRender(ModelState& modelState)
 {
-	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-	glClear(GL_COLOR_BUFFER_BIT);
 
+	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
+	// glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Renderer renderer;
 	m_texture->bind();
 	glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translation);

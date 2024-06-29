@@ -40,6 +40,7 @@ int main(void)
 {
 	GLFWwindow *window;
 
+	// ParsedObject parsedObject("cube.obj");
 	ParsedObject parsedObject("teapot2.obj");
 	// ParsedObject parsedObject("teapot.obj");
 	// ParsedObject parsedObject("42.obj");

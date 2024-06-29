@@ -2,11 +2,11 @@
 
 void KeyboardManager::update(ModelState &modelState)
 {
-	for (int keyNum = 0; keyNum < keysState.size(); keyNum++)
+	for (auto [key, state] : keysState)
 	{
-		if (keysState[keyNum])
+		if (state == GLFW_PRESS || state == GLFW_REPEAT)
 		{
-			switch (keyNum + KEY_SHIFT)
+			switch (key)
 			{
 			case GLFW_KEY_UP:
 				modelState.moveUp();
@@ -20,6 +20,13 @@ void KeyboardManager::update(ModelState &modelState)
 			case GLFW_KEY_RIGHT:
 				modelState.moveRight();
 				break;
+			case GLFW_KEY_MINUS:
+				modelState.decreaseScale();
+				break;
+			case GLFW_KEY_EQUAL:
+				if (keysState[GLFW_KEY_LEFT_SHIFT] > 0)
+					modelState.increaseScale();
+				break;
 			default:
 				break;
 			}
@@ -29,6 +36,6 @@ void KeyboardManager::update(ModelState &modelState)
 
 void KeyboardManager::setKeyState(int key, int action)
 {
-	if (key >= GLFW_KEY_RIGHT && key <= GLFW_KEY_UP)
-		keysState[key - KEY_SHIFT] = action;
+	if (keysState.count(key))
+		keysState[key] = action;
 }

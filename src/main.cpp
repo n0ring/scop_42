@@ -40,10 +40,10 @@ int main(void)
 {
 	GLFWwindow *window;
 
-	// ParsedObject parsedObject("cube.obj");
+	ParsedObject parsedObject("cube.obj");
 	// ParsedObject parsedObject("teapot2.obj");
 	// ParsedObject parsedObject("teapot.obj");
-	ParsedObject parsedObject("42.obj");
+	// ParsedObject parsedObject("42.obj");
 
 
 	/* Initialize the library */
@@ -117,7 +117,7 @@ int main(void)
 // frame
 		objectRenderer.onImGuiRender(fill);
 // frame
-		if (fill)
+		if (g_modelState.fill_model)
 			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_LINE
 		else 
 			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE

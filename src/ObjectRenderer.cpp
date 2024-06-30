@@ -30,18 +30,16 @@ ObjectRenderer::ObjectRenderer(const ParsedObject& parsedObject)
 
 void ObjectRenderer::onRender(ModelState& modelState)
 {
-
+	glm::mat4 model(1.0f);
 	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
 	// glClear(GL_COLOR_BUFFER_BIT);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Renderer renderer;
 	m_texture->bind();
-	glm::mat4 model = glm::translate(glm::mat4(1.0f), m_translation);
-	// scaling 
-	model = glm::scale(model,  modelState.scale);
-	// glm::mat4 model = glm::mat4(1.0f);
-	model = glm::rotate(model, glm::radians(modelState.rotation_x), glm::vec3(0.0f, 1.0f, 0.0f));
+	model = glm::translate(model, m_translation); // move model. rotate have to be after move 
+	model = glm::rotate(model, glm::radians(modelState.rotation_x), glm::vec3(0.0f, 1.0f, 0.0f)); // y set to 
 	model = glm::rotate(model, glm::radians(modelState.rotation_y), glm::vec3(1.0f, 0.0f, 0.0f));
+	model = glm::scale(model,  modelState.scale);
 	m_view = glm::translate(glm::mat4(1.0f), view_vec);
 	glm::mat4 mvp = m_proj * m_view * model;
 	m_shader->bind();
@@ -53,16 +51,11 @@ void ObjectRenderer::onRender(ModelState& modelState)
 
 void ObjectRenderer::onImGuiRender(int& fill)
 {
-	// ImGui::SliderFloat3("translationA", &m_translation.x, 0.0f, 10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
+	ImGui::SliderFloat3("translationA", &m_translation.x, -5.0f, 10.0f); // Edit 1 float using a slider from 0.0f to 1.0f
 	// ImGui::SliderFloat3("view", &view_vec.x, 0.0f, 10.0f);				// Edit 1 float using a slider from 0.0f to 1.0f
 	// ImGui::SliderFloat("rotate x", &m_rotation_x, 0.0f, 360.0f);
 	// ImGui::SliderFloat("rotate y", &m_rotation_y, 0.0f, 360.0f);
 	// ImGui::SliderFLoat3
-	if (ImGui::Button("Fill"))
-	{
-		fill = fill ? 0 : 1;
-		// m_value = (m_value == 1) ? 0 : 1;
-	}
 
 
 }

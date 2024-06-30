@@ -20,7 +20,9 @@ private:
 		{GLFW_KEY_UP, 0},
 		{GLFW_KEY_EQUAL, 0},
 		{GLFW_KEY_LEFT_SHIFT, 0},
-		{GLFW_KEY_MINUS, 0}
+		{GLFW_KEY_MINUS, 0},
+		{GLFW_KEY_F, 0},
+		{GLFW_KEY_U, 0}
 	};
 };
 

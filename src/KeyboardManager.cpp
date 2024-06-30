@@ -27,6 +27,12 @@ void KeyboardManager::update(ModelState &modelState)
 				if (keysState[GLFW_KEY_LEFT_SHIFT] > 0)
 					modelState.increaseScale();
 				break;
+			case GLFW_KEY_F:
+				modelState.fill_model = true;
+				break;
+			case GLFW_KEY_U:
+				modelState.fill_model = false;
+				break;
 			default:
 				break;
 			}

@@ -580,7 +580,8 @@ obj/ObjectRenderer.o: src/ObjectRenderer.cpp include/ObjectRenderer.hpp \
   include/glm/gtc/../ext/matrix_transform.hpp \
   include/glm/./ext/matrix_transform.inl \
   include/glm/gtc/matrix_transform.inl include/glm/gtc/../geometric.hpp \
-  include/glm/gtc/../trigonometric.hpp include/glm/gtc/../matrix.hpp
+  include/glm/gtc/../trigonometric.hpp include/glm/gtc/../matrix.hpp \
+  include/ModelState.hpp
 
 include/ObjectRenderer.hpp:
 
@@ -1829,3 +1830,5 @@ include/glm/gtc/../geometric.hpp:
 include/glm/gtc/../trigonometric.hpp:
 
 include/glm/gtc/../matrix.hpp:
+
+include/ModelState.hpp:

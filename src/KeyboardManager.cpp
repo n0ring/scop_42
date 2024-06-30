@@ -33,6 +33,18 @@ void KeyboardManager::update(ModelState &modelState)
 			case GLFW_KEY_U:
 				modelState.fill_model = false;
 				break;
+			case GLFW_KEY_W:
+				modelState.moveModelUp();
+				break;
+			case GLFW_KEY_S:
+				modelState.moveModelDown();
+				break;
+			case GLFW_KEY_D:
+				modelState.moveModelRight();
+				break;
+			case GLFW_KEY_A:
+				modelState.moveModelLeft();
+				break;
 			default:
 				break;
 			}

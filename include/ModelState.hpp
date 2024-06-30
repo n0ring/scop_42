@@ -7,6 +7,7 @@
 
 #define MOVE_STEP 1.0f
 #define SCALE_STEP 0.01f
+#define MOVE_MODEL_STEP 0.01f
 
 
 struct ModelState
@@ -15,8 +16,9 @@ struct ModelState
 	float rotation_y = 0.001f;
 	glm::vec3 scale;
 	bool fill_model = false;
+	glm::vec3 translation;
 
-	ModelState() : scale(1.0f, 1.0f, 1.0f) {}
+	ModelState() : scale(1.0f, 1.0f, 1.0f), translation(0.0f, 0.0f, 0.0f) {}
 
 	void moveX(float val)
 	{
@@ -77,5 +79,27 @@ struct ModelState
 			scale.x = 0;
 			scale.y = 0;
 		}
+	}
+
+	void moveModelUp()
+	{
+		if (translation.y <= 3.0f)
+			translation.y += MOVE_MODEL_STEP;
+	}
+	void moveModelDown()
+	{
+		if (translation.y >= -3.0f)
+			translation.y -= MOVE_MODEL_STEP;
+	}
+
+	void moveModelRight()
+	{
+		if (translation.x <= 5.0f)
+			translation.x += MOVE_MODEL_STEP;
+	}
+	void moveModelLeft()
+	{
+		if (translation.x >= -5.0f)
+			translation.x -= MOVE_MODEL_STEP;
 	}
 };

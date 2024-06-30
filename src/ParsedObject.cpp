@@ -41,18 +41,22 @@ void ParsedObject::parseFile()
 					m_indices.push_back(std::stoi(words[1]) - 1);
 					m_indices.push_back(std::stoi(words[2]) - 1);
 					m_indices.push_back(std::stoi(words[3]) - 1);
+					// add tex
 				} else if (words.size() == 5)
 				{
 					m_indices.push_back(std::stoi(words[1]) - 1);
 					m_indices.push_back(std::stoi(words[2]) - 1);
 					m_indices.push_back(std::stoi(words[3]) - 1);
+					// add tex
 
 					m_indices.push_back(std::stoi(words[1]) - 1);
 					m_indices.push_back(std::stoi(words[3]) - 1);
 					m_indices.push_back(std::stoi(words[4]) - 1);
+					// add tex
 				}
 			}
 		}
+		
 	}
 }
 

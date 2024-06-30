@@ -22,7 +22,11 @@ private:
 		{GLFW_KEY_LEFT_SHIFT, 0},
 		{GLFW_KEY_MINUS, 0},
 		{GLFW_KEY_F, 0},
-		{GLFW_KEY_U, 0}
+		{GLFW_KEY_U, 0},
+		{GLFW_KEY_W, 0},
+		{GLFW_KEY_S, 0},
+		{GLFW_KEY_D, 0},
+		{GLFW_KEY_A, 0},
 	};
 };
 

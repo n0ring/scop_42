@@ -36,6 +36,7 @@ private:
 
 	glm::vec3 m_translation;
 	glm::mat4 m_proj, m_view;
+	
 
 	glm::vec3 view_vec;
 };

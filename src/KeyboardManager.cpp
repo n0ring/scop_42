@@ -45,6 +45,18 @@ void KeyboardManager::update(ModelState &modelState)
 			case GLFW_KEY_A:
 				modelState.moveModelLeft();
 				break;
+			case GLFW_KEY_E:
+				modelState.moveModelFar();
+				break;
+			case GLFW_KEY_Q:
+				modelState.moveModelClose();
+				break;
+			case GLFW_KEY_T:
+				modelState.changeToTexture();
+				break;
+			case GLFW_KEY_C:
+				modelState.changeToColor();
+				break;
 			default:
 				break;
 			}

@@ -27,6 +27,10 @@ private:
 		{GLFW_KEY_S, 0},
 		{GLFW_KEY_D, 0},
 		{GLFW_KEY_A, 0},
+		{GLFW_KEY_E, 0},
+		{GLFW_KEY_Q, 0},
+		{GLFW_KEY_T, 0},
+		{GLFW_KEY_C, 0},
 	};
 };
 

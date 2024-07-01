@@ -9,6 +9,12 @@
 #define SCALE_STEP 0.01f
 #define MOVE_MODEL_STEP 0.01f
 
+enum class RenderMode
+{
+	COLOR,
+	TEXTURE
+};
+
 
 struct ModelState
 {
@@ -17,8 +23,10 @@ struct ModelState
 	glm::vec3 scale;
 	bool fill_model = false;
 	glm::vec3 translation;
+	RenderMode renderMode = RenderMode::COLOR;
+	glm::vec3 centerOffset;
 
-	ModelState() : scale(1.0f, 1.0f, 1.0f), translation(0.0f, 0.0f, 0.0f) {}
+	ModelState() : scale(1.0f, 1.0f, 1.0f), translation(0.0f, 0.0f, 0.0f), centerOffset(glm::vec3(0.0f)) {}
 
 	void moveX(float val)
 	{
@@ -101,5 +109,27 @@ struct ModelState
 	{
 		if (translation.x >= -5.0f)
 			translation.x -= MOVE_MODEL_STEP;
+	}
+
+	void moveModelClose()
+	{
+		if (translation.z >= -6.0f)
+			translation.z -= MOVE_MODEL_STEP;
+	}
+
+	void moveModelFar()
+	{
+		if (translation.z <= 2.5f)
+			translation.z += MOVE_MODEL_STEP;
+	}
+
+	void changeToColor()
+	{
+		renderMode = RenderMode::COLOR;
+	}
+
+	void changeToTexture()
+	{
+		renderMode = RenderMode::TEXTURE;
 	}
 };

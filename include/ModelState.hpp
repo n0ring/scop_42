@@ -7,7 +7,7 @@
 
 #define MOVE_STEP 1.0f
 #define SCALE_STEP 0.01f
-#define MOVE_MODEL_STEP 0.01f
+#define MOVE_MODEL_STEP 0.05f
 
 enum class RenderMode
 {

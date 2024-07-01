@@ -40,10 +40,10 @@ int main(void)
 {
 	GLFWwindow *window;
 
-	// ParsedObject parsedObject("teapot2.obj");
-	// ParsedObject parsedObject("cube.obj");
-	// ParsedObject parsedObject("teapot.obj");
-	ParsedObject parsedObject("42.obj");
+	ParsedObject parsedObject("teapot2.obj", g_modelState);
+	// ParsedObject parsedObject("cube.obj", g_modelState);
+	// ParsedObject parsedObject("teapot.obj", g_modelState);
+	// ParsedObject parsedObject("42.obj", g_modelState);
 
 
 	/* Initialize the library */

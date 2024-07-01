@@ -3,7 +3,7 @@
 ObjectRenderer::ObjectRenderer(const ParsedObject& parsedObject)
 	: m_translation(0, 0, 0),
 	//   m_proj(glm::ortho(-5.0f, 5.0f, -3.0f, 3.0f, -5.0f, 5.0f)),
-	m_proj(glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 10.0f)),
+	m_proj(glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.1f, 20.0f)),
 	m_view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))),
 	view_vec(0, 0, -7)
 {
@@ -29,15 +29,19 @@ ObjectRenderer::ObjectRenderer(const ParsedObject& parsedObject)
 
 void ObjectRenderer::onRender(ModelState& modelState)
 {
-	glm::mat4 model(3.0f);
+	glm::mat4 model(1.0f);
 	glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	Renderer renderer;
 	m_texture->bind();
+	model = glm::translate(model, modelState.centerOffset);
 	model = glm::translate(model, modelState.translation); // move model. rotate have to be after move 
+
 	model = glm::rotate(model, glm::radians(modelState.rotation_x), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(modelState.rotation_y), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::scale(model,  modelState.scale);
+	model = glm::translate(model, -modelState.centerOffset);
+
+	model = glm::scale(model, modelState.scale);
 	m_view = glm::translate(glm::mat4(1.0f), view_vec);
 	glm::mat4 mvp = m_proj * m_view * model;
 	m_shader->bind();

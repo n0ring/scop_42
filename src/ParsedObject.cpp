@@ -31,13 +31,16 @@ void addPos(std::vector<float>& arr, Pos& minPos, Pos& maxPos, float curX, float
 
 
 
-void ParsedObject::parseFile()
+void ParsedObject::parseFile(ModelState& modelState)
 {
 	std::string line;
 	std::ifstream file(m_fileName);
 	std::vector<std::string> words;
 	Pos minPos = {100000, 10000};
 	Pos maxPos = {-10000, -10000};
+	float x, y, z;
+	float countVert = 0;
+
 
 	if (file.is_open() == false)
 		return ;
@@ -49,9 +52,15 @@ void ParsedObject::parseFile()
 			split(line, words);
 			if (words[0] == "v")
 			{
-				                                   //           x                    y
-				addPos(m_positions, minPos, maxPos, std::stof(words[1]), std::stof(words[2]));
-				m_positions.push_back(std::stof(words[3]));
+				countVert++;
+				x = std::stof(words[1]);
+				y = std::stof(words[2]);
+				z = std::stof(words[3]);
+				modelState.centerOffset.x += x;
+				modelState.centerOffset.y += y;
+				modelState.centerOffset.z += z;
+				addPos(m_positions, minPos, maxPos, x, y);
+				m_positions.push_back(z);
 				for (int i = 0; i < 2; i++)
 					m_positions.push_back(0);
 			}
@@ -86,9 +95,11 @@ void ParsedObject::parseFile()
 		m_positions[i] = v;
 		m_positions[i + 1] = u;
 	}
+	modelState.centerOffset /= countVert;
+	std::cout << modelState.centerOffset.x << " " << modelState.centerOffset.y << " " << modelState.centerOffset.z << std::endl;
 }
 
-ParsedObject::ParsedObject(std::string fileName) : m_fileName(fileName)
+ParsedObject::ParsedObject(std::string fileName, ModelState& modelState) : m_fileName(fileName)
 {
-	parseFile();
+	parseFile(modelState);
 }

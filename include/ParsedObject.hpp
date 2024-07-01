@@ -5,10 +5,12 @@
 #include <fstream>
 #include <sstream>
 
+#include "ModelState.hpp"
+
 class ParsedObject
 {
 public:
-	ParsedObject(std::string fileName);
+	ParsedObject(std::string fileName, ModelState& modelState);
 	~ParsedObject() {}
 
 	
@@ -19,7 +21,7 @@ private:
 	std::vector<float> m_positions;
 	std::vector<unsigned int> m_indices;
 
-	void parseFile();
+	void parseFile(ModelState& modelState);
 	void split(std::string& line, std::vector<std::string>& words);
 	
 };

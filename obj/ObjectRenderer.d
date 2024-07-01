@@ -564,9 +564,9 @@ obj/ObjectRenderer.o: src/ObjectRenderer.cpp include/ObjectRenderer.hpp \
   include/glm/integer.hpp include/glm/detail/func_integer.inl \
   include/Renderer.hpp include/ParsedObject.hpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/sstream \
-  include/glm/gtc/matrix_transform.hpp include/glm/gtc/../mat4x4.hpp \
-  include/glm/gtc/../vec2.hpp include/glm/gtc/../vec3.hpp \
-  include/glm/gtc/../vec4.hpp \
+  include/ModelState.hpp include/glm/gtc/matrix_transform.hpp \
+  include/glm/gtc/../mat4x4.hpp include/glm/gtc/../vec2.hpp \
+  include/glm/gtc/../vec3.hpp include/glm/gtc/../vec4.hpp \
   include/glm/gtc/../ext/matrix_projection.hpp \
   include/glm/./ext/../gtc/constants.hpp \
   include/glm/gtc/../ext/scalar_constants.hpp \
@@ -580,8 +580,7 @@ obj/ObjectRenderer.o: src/ObjectRenderer.cpp include/ObjectRenderer.hpp \
   include/glm/gtc/../ext/matrix_transform.hpp \
   include/glm/./ext/matrix_transform.inl \
   include/glm/gtc/matrix_transform.inl include/glm/gtc/../geometric.hpp \
-  include/glm/gtc/../trigonometric.hpp include/glm/gtc/../matrix.hpp \
-  include/ModelState.hpp
+  include/glm/gtc/../trigonometric.hpp include/glm/gtc/../matrix.hpp
 
 include/ObjectRenderer.hpp:
 
@@ -1785,6 +1784,8 @@ include/ParsedObject.hpp:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/sstream:
 
+include/ModelState.hpp:
+
 include/glm/gtc/matrix_transform.hpp:
 
 include/glm/gtc/../mat4x4.hpp:
@@ -1830,5 +1831,3 @@ include/glm/gtc/../geometric.hpp:
 include/glm/gtc/../trigonometric.hpp:
 
 include/glm/gtc/../matrix.hpp:
-
-include/ModelState.hpp:

@@ -40,8 +40,9 @@ int main(void)
 {
 	GLFWwindow *window;
 
-	ParsedObject parsedObject("teapot2.obj", g_modelState);
+	// ParsedObject parsedObject("teapot2.obj", g_modelState);
 	// ParsedObject parsedObject("cube.obj", g_modelState);
+	ParsedObject parsedObject("new_cube.obj", g_modelState);
 	// ParsedObject parsedObject("teapot.obj", g_modelState);
 	// ParsedObject parsedObject("42.obj", g_modelState);
 

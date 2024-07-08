@@ -10,18 +10,20 @@ ObjectRenderer::ObjectRenderer(const ParsedObject& parsedObject)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	m_VAO = std::make_unique<VertexArray>();
+
+
 	m_VBO = std::make_unique<VertexBuffer>(parsedObject.getPositions().data(), parsedObject.getPositions().size() * sizeof(float));
 	VertexBufferLayout layouts;
 	layouts.push<float>(3); // size of data 
 	layouts.push<float>(2); // tex coords
-	m_VAO->addBuffer(*m_VBO, layouts);
+	m_VAO->addBuffer(*m_VBO, layouts, parsedObject.getPositions().size());
 	m_IBO = std::make_unique<IndexBuffer>(parsedObject.getIndices().data(), parsedObject.getIndices().size());
 
 	m_shader = std::make_unique<Shader>("res/shaders/Basic.shader");
 
 	m_shader->bind();
 
-	m_texture = std::make_unique<Texture>("res/texture/texture3.jpg");
+	m_texture = std::make_unique<Texture>("res/texture/tex1.bmp");
 	m_texture->bind();
 	m_shader->setUniform1i("u_Texture", 0);
 	m_shader->setUniform1i("u_RenderMode", static_cast<int>(RenderMode::COLOR));
@@ -39,9 +41,11 @@ void ObjectRenderer::onRender(ModelState& modelState)
 
 	model = glm::rotate(model, glm::radians(modelState.rotation_x), glm::vec3(0.0f, 1.0f, 0.0f));
 	model = glm::rotate(model, glm::radians(modelState.rotation_y), glm::vec3(1.0f, 0.0f, 0.0f));
+
 	model = glm::translate(model, -modelState.centerOffset);
 
 	model = glm::scale(model, modelState.scale);
+
 	m_view = glm::translate(glm::mat4(1.0f), view_vec);
 	glm::mat4 mvp = m_proj * m_view * model;
 	m_shader->bind();

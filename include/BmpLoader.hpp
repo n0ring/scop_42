@@ -7,6 +7,6 @@
 class BmpLoader
 {
 public:
-	static bool loadBMPTexture(const char *filename,	
-		std::vector<unsigned char> &data);
+	static bool loadBMPTexture(const char *filename, 
+		std::vector<unsigned char>& data, int32_t& height, int32_t& width);
 };

@@ -12,10 +12,12 @@ public:
 	VertexArray();
 	~VertexArray();
 
-	void addBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout);
+	void addBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout, unsigned int count);
 	void bind() const;
 	void unbind() const;
+	inline unsigned int getCount() const {return m_count;}
 
 private:
 	unsigned int m_renderID;
+	unsigned int m_count;
 };

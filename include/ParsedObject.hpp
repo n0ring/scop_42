@@ -22,6 +22,9 @@ private:
 	std::vector<unsigned int> m_indices;
 
 	void parseFile(ModelState& modelState);
-	void split(std::string& line, std::vector<std::string>& words);
-	
+	void parseFile(ModelState& modelState, int i);
+
+	void split(std::string& line, std::vector<std::string>& words, char div);
+	void addFaceDefault( std::vector<std::string>& words);
+	void addFaceSet( std::vector<std::string>& words);
 };

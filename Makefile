@@ -17,6 +17,7 @@ SRC		=	$(addprefix src/,	main.cpp\
 								ParsedObject.cpp\
 								ObjectRenderer.cpp\
 								KeyboardManager.cpp\
+								BmpLoader.cpp\
 								)
 OBJDIR	=	obj
 SRCDIR	=	src

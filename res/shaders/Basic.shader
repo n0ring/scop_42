@@ -26,13 +26,14 @@ in vec2 TexCoord;
 uniform vec4 our_color;
 uniform sampler2D u_Texture;
 uniform int u_RenderMode;
+
 void main() {
 
-	if (u_RenderMode == 0)
+	if (u_RenderMode == 1) // color
 	{
 		color = vec4(v_ColorCoord);
 	}
-	else 
+	else  // texture
 	{
 		color = vec4(texture(u_Texture, TexCoord));
 	}

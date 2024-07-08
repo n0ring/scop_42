@@ -23,7 +23,7 @@ struct BMPHeader
 };
 #pragma pack(pop)
 
-bool BmpLoader::loadBMPTexture(const char *filename, std::vector<unsigned char>& data)
+bool BmpLoader::loadBMPTexture(const char *filename, std::vector<unsigned char>& data, int32_t& height, int32_t& width)
 {
 	BMPHeader header;
 
@@ -40,6 +40,8 @@ bool BmpLoader::loadBMPTexture(const char *filename, std::vector<unsigned char>&
 		std::cerr << "Not a valid BMP file: " << filename << std::endl;
 		return false;
 	}
+	height = header.height;
+	width = header.width;
 
 	file.seekg(header.offsetData, std::ios::beg);
 
@@ -48,6 +50,7 @@ bool BmpLoader::loadBMPTexture(const char *filename, std::vector<unsigned char>&
 	data.resize(imageSize);
 	file.read(reinterpret_cast<char *>(data.data()), imageSize);
 	file.close();
+	std::cout << header.bitCount << std::endl;
 
 	return true;
 }

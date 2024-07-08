@@ -10,10 +10,11 @@ VertexArray::~VertexArray()
 	glDeleteVertexArrays(1, &m_renderID);
 }
 
-void VertexArray::addBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout)
+void VertexArray::addBuffer(const VertexBuffer &vb, const VertexBufferLayout &layout, unsigned int count)
 {
 	bind();
 	vb.bind();
+	m_count = count;
 	unsigned long offset = 0;
 	const auto& elements = layout.getElements();
 	for (size_t i = 0; i < elements.size(); ++i)

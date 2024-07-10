@@ -42,11 +42,12 @@ int main(void)
 
 	// ParsedObject parsedObject("teapot2.obj", g_modelState);
 	// ParsedObject parsedObject("cube.obj", g_modelState);
-	ParsedObject parsedObject("new_cube.obj", g_modelState);
+	// ParsedObject parsedObject("new_cube.obj", g_modelState);
 	// ParsedObject parsedObject("teapot.obj", g_modelState);
-	// ParsedObject parsedObject("42.obj", g_modelState);
+	ParsedObject parsedObject("42.obj", g_modelState);
 
-
+	if (parsedObject.getParseStatus() == false)
+		return -1;
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;

@@ -20,12 +20,13 @@
 class ObjectRenderer
 {
 public:
-	ObjectRenderer(const ParsedObject &parsedObject);
+	ObjectRenderer(const std::string& objectFileName);
 	~ObjectRenderer() {}
 	void onUpdate(float deltaTime);
-	void onRender(ModelState&);
+	void onRender();
 	void onImGuiRender(int& fill);
 
+	inline ModelState& getModelState() {return m_modelState;}
 
 private:
 	std::unique_ptr<VertexArray> m_VAO;
@@ -39,4 +40,6 @@ private:
 	
 
 	glm::vec3 view_vec;
+	ModelState m_modelState;
+	ParsedObject m_parsedObject;
 };

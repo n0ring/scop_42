@@ -100,14 +100,18 @@ bool ParsedObject::addComplexFace(std::vector<std::string>& words, std::vector<f
 		split(word, m_faceWords, '/');
 		try
 		{
-			if (m_faceWords.size() == 2) // n/n
+			if (m_faceWords.size() == 2 || m_faceWords.size() == 3)
 			{
-				// try catch
-				m_tmpFaces[countFaces].vtx = std::stoi(m_faceWords[0]);
-				m_tmpFaces[countFaces++].txt = std::stoi(m_faceWords[1]);
+				if (m_faceWords.size() > 1) // n/n
+				{
+					m_tmpFaces[countFaces].vtx = std::stoi(m_faceWords[0]);
+					m_tmpFaces[countFaces].txt = std::stoi(m_faceWords[1]);
+				}
+				if (m_faceWords.size() > 2) // n/n/n
+					m_tmpFaces[countFaces].nrm = std::stoi(m_faceWords[2]);
+				countFaces++;
 			}
-			if (m_faceWords.size() == 3) // n/n/n
-				m_tmpFaces[countFaces++].nrm = std::stoi(m_faceWords[2]);
+				
 		}
 		catch(const std::exception& e)
 		{
@@ -176,6 +180,7 @@ void ParsedObject::parseFile(ModelState& modelState, int i)
 	Pos maxPos = {-10000, -10000, -10000};
 	float countVert = 0;
 
+	int debug_count = 0;
 	if (file.is_open() == false)
 		return ;
 	while (getline(file, line))
@@ -207,25 +212,32 @@ void ParsedObject::parseFile(ModelState& modelState, int i)
 				return ;
 		}
 	}
+	std::cout << "Faces count: " << faces.size() << std::endl;
+	std::cout << "Vertices count: " << vertices.size() << std::endl;
+	std::cout << "Text_coord count: " << text_coord.size() << std::endl;
 	for (auto f : faces)
 	{
-		m_positions.push_back(vertices[f.vtx - 1].x);
-		m_positions.push_back(vertices[f.vtx - 1].y);
-		m_positions.push_back(vertices[f.vtx - 1].z);
-		if (f.txt != 0) // textures
+		if (f.vtx)
 		{
-			m_positions.push_back(text_coord[f.txt - 1].x);
-			m_positions.push_back(text_coord[f.txt - 1].y);
-		}
-		else 
-		{
-			float theta = atan2(vertices[f.vtx - 1].z, vertices[f.vtx - 1].x);
-			float phi =
-			acos(vertices[f.vtx - 1].y / sqrt(vertices[f.vtx - 1].x * vertices[f.vtx - 1].x 
-				+ vertices[f.vtx - 1].y * vertices[f.vtx - 1].y 
-				+ vertices[f.vtx - 1].z * vertices[f.vtx - 1].z));
-			m_positions.push_back( (theta + M_PI) / (2.0f * M_PI)); // TODO texture calculate
-			m_positions.push_back(phi / M_PI);
+			m_positions.push_back(vertices[f.vtx - 1].x);
+			m_positions.push_back(vertices[f.vtx - 1].y);
+			m_positions.push_back(vertices[f.vtx - 1].z);
+			if (f.txt != 0) // textures
+			{
+				m_positions.push_back(text_coord[f.txt - 1].x);
+				m_positions.push_back(text_coord[f.txt - 1].y);
+			}
+			else 
+			{
+				float theta = atan2(vertices[f.vtx - 1].z, vertices[f.vtx - 1].x);
+				float phi =
+				acos(vertices[f.vtx - 1].y / sqrt(vertices[f.vtx - 1].x * vertices[f.vtx - 1].x 
+					+ vertices[f.vtx - 1].y * vertices[f.vtx - 1].y 
+					+ vertices[f.vtx - 1].z * vertices[f.vtx - 1].z));
+				m_positions.push_back( (theta + M_PI) / (2.0f * M_PI)); // TODO texture calculate
+				m_positions.push_back(phi / M_PI);
+			}
+
 		}
 	}
 	if (countVert)
@@ -235,6 +247,7 @@ void ParsedObject::parseFile(ModelState& modelState, int i)
 ParsedObject::ParsedObject(std::string fileName, ModelState& modelState) : m_fileName(fileName), m_tmpFaces(4)
 {
 	parseFile(modelState, 1);
+	std::cout << "Log: Parse done for file: " << fileName << ". Verticies: " << m_positions.size() << std::endl;
 }
 
 // void normalizeTextureCoordinates(Object &object) {

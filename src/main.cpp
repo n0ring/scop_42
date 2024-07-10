@@ -27,7 +27,7 @@
 
 #include "KeyboardManager.hpp"
 
-ModelState g_modelState;
+// ModelState g_modelState;
 KeyboardManager keyboardManager;
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -44,10 +44,10 @@ int main(void)
 	// ParsedObject parsedObject("cube.obj", g_modelState);
 	// ParsedObject parsedObject("new_cube.obj", g_modelState);
 	// ParsedObject parsedObject("teapot.obj", g_modelState);
-	ParsedObject parsedObject("42.obj", g_modelState);
+	// ParsedObject parsedObject("42.obj", g_modelState);
 
-	if (parsedObject.getParseStatus() == false)
-		return -1;
+	// if (parsedObject.getParseStatus() == false)
+	// 	return -1;
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -79,7 +79,8 @@ int main(void)
 	glEnable(GL_BLEND);
 
 	Renderer renderer; 
-	ObjectRenderer objectRenderer(parsedObject); // model states 
+	// ObjectRenderer objectRenderer("teapot2.obj"); // model states 
+	ObjectRenderer objectRenderer("ship.obj"); // model states 
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
@@ -98,14 +99,15 @@ int main(void)
     const char* glsl_version = "#version 150";
     ImGui_ImplOpenGL3_Init(glsl_version);
 	
-	int fill = 0;
 	glfwSetKeyCallback(window, key_callback);
 		glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 	while (!glfwWindowShouldClose(window))
 	{
-		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+		glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
+		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+		// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		renderer.clear();
 
 
@@ -113,16 +115,9 @@ int main(void)
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
-		keyboardManager.update(g_modelState);
+		keyboardManager.update(objectRenderer.getModelState());
 
-		objectRenderer.onRender(g_modelState);
-// frame
-		objectRenderer.onImGuiRender(fill);
-// frame
-		if (!g_modelState.fill_model)
-			glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_LINE
-		else 
-			glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE
+		objectRenderer.onRender();
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		

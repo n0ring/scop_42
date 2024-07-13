@@ -45,7 +45,7 @@ bool isLineValid(std::vector<std::string>& words)
 	if (words.empty())
 		return false;
 	std::string& token = words[0];
-	return token == "v" || token == "f" || token == "vt";
+	return token == "v" || token == "f" || token == "vt" || token == "vn";
 }
 
 bool ParsedObject::addVertex(std::vector<std::string>& words, std::vector<Pos>& vertices, ModelState& modelState)
@@ -68,6 +68,26 @@ bool ParsedObject::addVertex(std::vector<std::string>& words, std::vector<Pos>& 
 	modelState.centerOffset.x += tmp_x;
 	modelState.centerOffset.y += tmp_y;
 	modelState.centerOffset.z += tmp_z;
+	return true;
+}
+
+bool ParsedObject::addNormals(std::vector<std::string>& words, std::vector<Pos>& normals)
+{
+	try
+	{
+		tmp_x = std::stof(words[kIdxXData]);
+		tmp_y = std::stof(words[kIdxYData]);
+		tmp_z = std::stof(words[kIdxZData]);
+	}
+	catch(const std::exception& e)
+	{
+		std::cerr << e.what() << '\n';
+		for (auto& w : words)
+			std::cout << w << " ";
+		std::cout << std::endl << std::endl;
+		return false;
+	}
+	normals.push_back({tmp_x, tmp_y, tmp_z});
 	return true;
 }
 
@@ -167,7 +187,7 @@ bool ParsedObject::addSimpleFace(std::vector<std::string>& words, std::vector<fa
 }
 
 
-void ParsedObject::parseFile(ModelState& modelState, int i)
+void ParsedObject::parseFile(ModelState& modelState)
 {
 	std::string line;
 	std::ifstream file(m_fileName);
@@ -175,6 +195,7 @@ void ParsedObject::parseFile(ModelState& modelState, int i)
 	std::vector<Pos> vertices;
 	std::vector<textPos> text_coord;
 	std::vector<face> faces;
+	std::vector<Pos> normals;
 	// float x, y, z;
 	Pos minPos = {100000, 10000, 10000};
 	Pos maxPos = {-10000, -10000, -10000};
@@ -208,6 +229,13 @@ void ParsedObject::parseFile(ModelState& modelState, int i)
 					m_ParseStatus = addSimpleFace(words, faces);
 				}
 			}
+			else if (words[kIdxTypeData] == kNormalData) // NORMALS
+			{
+				if (!modelState.hasNormals)
+					modelState.hasNormals = true;
+				m_ParseStatus = addNormals(words, normals);
+			}
+
 			if (m_ParseStatus == false)
 				return ;
 		}
@@ -215,6 +243,7 @@ void ParsedObject::parseFile(ModelState& modelState, int i)
 	std::cout << "Faces count: " << faces.size() << std::endl;
 	std::cout << "Vertices count: " << vertices.size() << std::endl;
 	std::cout << "Text_coord count: " << text_coord.size() << std::endl;
+	std::cout << "Normals count: " << normals.size() << std::endl;
 	for (auto f : faces)
 	{
 		if (f.vtx)
@@ -237,25 +266,95 @@ void ParsedObject::parseFile(ModelState& modelState, int i)
 				m_positions.push_back( (theta + M_PI) / (2.0f * M_PI)); // TODO texture calculate
 				m_positions.push_back(phi / M_PI);
 			}
+			if (f.nrm)
+			{
 
+				m_positions.push_back(normals[f.nrm - 1].x);
+				m_positions.push_back(normals[f.nrm - 1].y);
+				m_positions.push_back(normals[f.nrm - 1].z);
+			}
+			else 
+			{
+				m_positions.push_back(0);
+				m_positions.push_back(0);
+				m_positions.push_back(0);
+			}
 		}
 	}
+	std::cout << "offset: " << modelState.centerOffset.x << " " << modelState.centerOffset.y << " "<< modelState.centerOffset.z << std::endl; 
+	std::cout << "countVert: " << countVert << std::endl;
 	if (countVert)
 		modelState.centerOffset /= countVert;
+	std::cout << "offset after div: " << modelState.centerOffset.x << " " << modelState.centerOffset.y << " "<< modelState.centerOffset.z  << std::endl; 
+}
+void ParsedObject::generateIndeces()
+{
+	vertex vtx;
+	std::unordered_map<vertex, int, vertex_hash> mp; // [vtx, idx]
+	int idx = 0;
+	// every 5 vtx
+	for (int i = 7; i < m_positions.size(); i += 8)
+	{
+		vtx.x = m_positions[i - 7];
+		vtx.y = m_positions[i - 6];
+		vtx.z = m_positions[i - 5];
+		vtx.u = m_positions[i - 4];
+		vtx.v = m_positions[i - 3];
+		vtx.vnx = m_positions[i - 2];
+		vtx.vny = m_positions[i - 1];
+		vtx.vnz = m_positions[i];
+		
+		if (mp.count(vtx))
+		{
+			m_indices.push_back(mp[vtx]);
+		}
+		else 
+		{
+			mp[vtx] = idx;
+			m_indices.push_back(idx);
+		}
+		idx++;
+	}
+}
+
+// 0 1 2 3 4 5 6 7
+// 8 9 0 1 2 3 4 5
+// 6 7 8 9 0 1 2 3 
+
+void ParsedObject::generateNormals()
+{
+	for (int i = 23; i < m_positions.size(); i += 24)
+	{
+		// sides						x						y				z
+		glm::vec3 v0 = glm::vec3(m_positions[i - 23], m_positions[i - 22], m_positions[i - 21]); 
+		glm::vec3 v1 = glm::vec3(m_positions[i - 15], m_positions[i - 14], m_positions[i - 13]); 
+		glm::vec3 v2 = glm::vec3(m_positions[i - 7], m_positions[i - 6], m_positions[i - 5]); 
+
+		glm::vec3 edge1 = v1 - v0;
+        glm::vec3 edge2 = v2 - v0;
+		glm::vec3 normal = glm::normalize(glm::cross(edge1, edge2));
+		m_positions[i - 18] = normal.x;
+		m_positions[i - 17] = normal.y;
+		m_positions[i - 16] = normal.z;
+
+		m_positions[i - 10] = normal.x;
+		m_positions[i - 9] = normal.y;
+		m_positions[i - 8] = normal.z;
+
+		m_positions[i - 2] = normal.x;
+		m_positions[i - 1] = normal.y;
+		m_positions[i - 0] = normal.z;
+	}
 }
 
 ParsedObject::ParsedObject(std::string fileName, ModelState& modelState) : m_fileName(fileName), m_tmpFaces(4)
 {
-	parseFile(modelState, 1);
-	std::cout << "Log: Parse done for file: " << fileName << ". Verticies: " << m_positions.size() << std::endl;
+	parseFile(modelState);
+	if (modelState.hasNormals == false)
+	{
+		generateNormals();
+		modelState.hasNormals = true;
+	}
+	generateIndeces();
+	std::cout << "Log: Parse done for file: " << fileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;
 }
-
-// void normalizeTextureCoordinates(Object &object) {
-//  for (auto &vertex : object.vertices) {
-//   float theta = atan2(vertex.z, vertex.x);
-//   float phi =
-//    acos(vertex.y / sqrt(vertex.x * vertex.x + vertex.y * vertex.y + vertex.z * vertex.z));
-//   vertex.texX = (theta + M_PI) / (2.0f * M_PI);
-//   vertex.texY = phi / M_PI;
-//  }
-// }

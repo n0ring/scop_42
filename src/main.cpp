@@ -80,24 +80,21 @@ int main(void)
 
 	Renderer renderer; 
 	// ObjectRenderer objectRenderer("teapot2.obj"); // model states 
-	ObjectRenderer objectRenderer("ship.obj"); // model states 
+	// ObjectRenderer objectRenderer("sword.obj"); // model states 
+	// ObjectRenderer objectRenderer("ship.obj"); // model states 
+	// ObjectRenderer objectRenderer("42.obj"); // model states 
+	// ObjectRenderer objectRenderer("cube.obj"); // model states 
+	// ObjectRenderer objectRenderer("new_cube.obj"); // model states 
+	// ObjectRenderer objectRenderer("res1/plane.obj"); // model states 
+	// ObjectRenderer objectRenderer("res1/alienanimal.obj"); // model states 
+	// ObjectRenderer objectRenderer("res1/castle.obj"); // model states 
+	// ObjectRenderer objectRenderer("res1/spider.obj"); // model states 
+	// ObjectRenderer objectRenderer("res1/building.obj"); // model states 
+	ObjectRenderer objectRenderer("res1/ohouse.obj"); // model states 
+	
 
     // Setup Dear ImGui context
     IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); 
-	(void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
-
-    // Setup Dear ImGui style
-    ImGui::StyleColorsDark();
-    //ImGui::StyleColorsLight();
-
-    // Setup Platform/Renderer backends
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    const char* glsl_version = "#version 150";
-    ImGui_ImplOpenGL3_Init(glsl_version);
 	
 	glfwSetKeyCallback(window, key_callback);
 		glEnable(GL_BLEND);
@@ -107,20 +104,12 @@ int main(void)
 	{
 		glClearColor(0.5f, 0.5f, 0.7f, 1.0f);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		// glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		renderer.clear();
 
 
-		// Start the Dear ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
 		keyboardManager.update(objectRenderer.getModelState());
 
 		objectRenderer.onRender();
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-		
 		glfwSwapBuffers(window);
 
 		/* Poll for and process events */
@@ -129,10 +118,6 @@ int main(void)
 
 	// glDeleteProgram(shader);
 	// glDeleteBuffers(1, &vbo);
-
-	ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
 	// delete currentTest;
 	// if (currentTest != testMenu)
 	// 	delete testMenu;

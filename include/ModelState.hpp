@@ -7,7 +7,8 @@
 
 #define MOVE_STEP 1.0f
 #define SCALE_STEP 0.01f
-#define MOVE_MODEL_STEP 0.05f
+#define MOVE_MODEL_STEP 0.1f
+// #define MOVE_MODEL_STEP 0.1f
 
 enum class RenderMode
 {
@@ -25,8 +26,11 @@ struct ModelState
 	glm::vec3 translation;
 	RenderMode renderMode = RenderMode::COLOR;
 	glm::vec3 centerOffset;
+	bool hasNormals = false;
 
-	ModelState() : scale(1.0f, 1.0f, 1.0f), translation(0.0f, 0.0f, 0.0f), centerOffset(glm::vec3(0.0f)) {}
+	ModelState() : scale(1.0f, 1.0f, 1.0f), 
+		translation(glm::vec3(0.5f)), 
+		centerOffset(glm::vec3(0.0f)) {}
 
 	void moveX(float val)
 	{
@@ -91,35 +95,35 @@ struct ModelState
 
 	void moveModelUp()
 	{
-		if (translation.y <= 3.0f)
+		// if (translation.y <= 3.0f)
 			translation.y += MOVE_MODEL_STEP;
 	}
 	void moveModelDown()
 	{
-		if (translation.y >= -3.0f)
+		// if (translation.y >= -3.0f)
 			translation.y -= MOVE_MODEL_STEP;
 	}
 
 	void moveModelRight()
 	{
-		if (translation.x <= 5.0f)
+		// if (translation.x <= 5.0f)
 			translation.x += MOVE_MODEL_STEP;
 	}
 	void moveModelLeft()
 	{
-		if (translation.x >= -5.0f)
+		// if (translation.x >= -5.0f)
 			translation.x -= MOVE_MODEL_STEP;
 	}
 
 	void moveModelClose()
 	{
-		if (translation.z >= -6.0f)
+		// if (translation.z >= -6.0f)
 			translation.z -= MOVE_MODEL_STEP;
 	}
 
 	void moveModelFar()
 	{
-		if (translation.z <= 2.5f)
+		// if (translation.z <= 2.5f)
 			translation.z += MOVE_MODEL_STEP;
 	}
 

@@ -66,7 +66,6 @@ public:
 	inline const std::vector<float>& getPositions() const {return m_positions; }
 	inline const std::vector<unsigned int>& getIndices() const {return m_indices; }
 	inline bool getParseStatus() const {return m_ParseStatus;}
-
 private:
 	std::string m_fileName;
 	std::vector<float> m_positions;

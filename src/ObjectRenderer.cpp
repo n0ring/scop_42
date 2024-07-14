@@ -9,6 +9,8 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName)
 	view_vec(0, 0, -7),
 	m_parsedObject(objectFileName, m_modelState)
 {
+	if (m_parsedObject.getParseStatus() == false)
+		return ;
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	m_VAO = std::make_unique<VertexArray>();
@@ -31,6 +33,7 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName)
 	m_shader->setUniform1i("u_Texture", 0);
 	m_shader->setUniform1i("u_HasNormal", static_cast<int>(m_modelState.hasNormals));
 	m_shader->setUniform1i("u_RenderMode", static_cast<int>(RenderMode::COLOR));
+	m_objectState = true;
 }
 
 void ObjectRenderer::onRender()
@@ -54,7 +57,7 @@ void ObjectRenderer::onRender()
 	m_shader->setUniformMat4f("u_model", model);
 	m_shader->setUniform1i("u_RenderMode", static_cast<int>(m_modelState.renderMode));
 
-	if (m_modelState.fill_model)
+	if (!m_modelState.fill_model)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_LINE
 	else 
 		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE); // GL_LINE

@@ -53,13 +53,11 @@ uniform int u_HasNormal;
 // uniform vec3 lightColor;  // Цвет света
 // uniform vec3 objectColor; // Цвет объекта
 vec4 getNormalColor() {
-	vec3 lightPos = vec3(8.0, 10.0, 3.0);
+	vec3 lightPos = vec3(0.0, 10.0, 3.0);
 	vec3 viewPos = vec3(0.0, 0.0, 0.0);
 	vec3 lightColor = vec3(1.0, 1.0, 1.0);
-	vec3 objectColor;
-	objectColor[0] = v_ColorCoord[0];
-	objectColor[1] = v_ColorCoord[1];
-	objectColor[2] = v_ColorCoord[2];
+	vec3 objectColor = vec3(1.0f, 1.0f, 1.0f);
+
 
     float ambientStrength = 0.1;
     vec3 ambient = ambientStrength * lightColor;
@@ -75,7 +73,6 @@ vec4 getNormalColor() {
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
     vec3 specular = specularStrength * spec * lightColor;
     
-    // Итоговое освещение
     return vec4((ambient + diffuse + specular) * objectColor, 1.0);
 
 }

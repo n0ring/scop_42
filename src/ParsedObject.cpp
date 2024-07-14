@@ -203,7 +203,10 @@ void ParsedObject::parseFile(ModelState& modelState)
 
 	int debug_count = 0;
 	if (file.is_open() == false)
+	{
+		std::cout << "File error: " << m_fileName << std::endl;
 		return ;
+	}
 	while (getline(file, line))
 	{
 		split(line, words, ' ');
@@ -350,11 +353,14 @@ void ParsedObject::generateNormals()
 ParsedObject::ParsedObject(std::string fileName, ModelState& modelState) : m_fileName(fileName), m_tmpFaces(4)
 {
 	parseFile(modelState);
-	if (modelState.hasNormals == false)
+	if (m_ParseStatus)
 	{
-		generateNormals();
-		modelState.hasNormals = true;
+		if (modelState.hasNormals == false)
+		{
+			generateNormals();
+			modelState.hasNormals = true;
+		}
+		generateIndeces();
+		std::cout << "Log: Parse done for file: " << fileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;
 	}
-	generateIndeces();
-	std::cout << "Log: Parse done for file: " << fileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;
 }

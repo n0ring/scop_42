@@ -40,14 +40,6 @@ int main(void)
 {
 	GLFWwindow *window;
 
-	// ParsedObject parsedObject("teapot2.obj", g_modelState);
-	// ParsedObject parsedObject("cube.obj", g_modelState);
-	// ParsedObject parsedObject("new_cube.obj", g_modelState);
-	// ParsedObject parsedObject("teapot.obj", g_modelState);
-	// ParsedObject parsedObject("42.obj", g_modelState);
-
-	// if (parsedObject.getParseStatus() == false)
-	// 	return -1;
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -79,9 +71,10 @@ int main(void)
 	glEnable(GL_BLEND);
 
 	Renderer renderer; 
+	// ObjectRenderer objectRenderer("teapot.obj"); // model states 
 	// ObjectRenderer objectRenderer("teapot2.obj"); // model states 
 	// ObjectRenderer objectRenderer("sword.obj"); // model states 
-	// ObjectRenderer objectRenderer("ship.obj"); // model states 
+	ObjectRenderer objectRenderer("ship.obj"); // model states 
 	// ObjectRenderer objectRenderer("42.obj"); // model states 
 	// ObjectRenderer objectRenderer("cube.obj"); // model states 
 	// ObjectRenderer objectRenderer("new_cube.obj"); // model states 
@@ -90,11 +83,12 @@ int main(void)
 	// ObjectRenderer objectRenderer("res1/castle.obj"); // model states 
 	// ObjectRenderer objectRenderer("res1/spider.obj"); // model states 
 	// ObjectRenderer objectRenderer("res1/building.obj"); // model states 
-	ObjectRenderer objectRenderer("res1/ohouse.obj"); // model states 
-	
+	// ObjectRenderer objectRenderer("res1/ohouse.obj"); // model states 
 
-    // Setup Dear ImGui context
-    IMGUI_CHECKVERSION();
+	if (objectRenderer.isObjectValid() == false)
+	{
+		return -1;
+	}
 	
 	glfwSetKeyCallback(window, key_callback);
 		glEnable(GL_BLEND);
@@ -115,14 +109,7 @@ int main(void)
 		/* Poll for and process events */
 		glfwPollEvents();
 	}
-
-	// glDeleteProgram(shader);
-	// glDeleteBuffers(1, &vbo);
-	// delete currentTest;
-	// if (currentTest != testMenu)
-	// 	delete testMenu;
-
+	glfwDestroyWindow(window);
 	glfwTerminate();
-	// glDeleteVertexArrays(1, &vao);
 	return 0;
 }

@@ -55,4 +55,8 @@ fclean	: clean
 x : all
 	./$(NAME)
 
+
+leaks			:	all
+					leaks --atExit -- ./$(NAME)
+
 -include $(DEPENDS)

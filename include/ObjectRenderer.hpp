@@ -27,6 +27,7 @@ public:
 	void onImGuiRender(int& fill);
 
 	inline ModelState& getModelState() {return m_modelState;}
+	inline bool isObjectValid() {return m_objectState; }
 
 private:
 	std::unique_ptr<VertexArray> m_VAO;
@@ -42,4 +43,5 @@ private:
 	glm::vec3 view_vec;
 	ModelState m_modelState;
 	ParsedObject m_parsedObject;
+	bool m_objectState = false;
 };

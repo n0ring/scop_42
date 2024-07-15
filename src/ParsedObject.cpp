@@ -114,7 +114,11 @@ bool ParsedObject::addComplexFace(std::vector<std::string>& words, std::vector<f
 {
 	int countFaces = 0;
 
-	
+	if (words.size() > 4)
+	{
+		std::cout << "incorrect file. Use only triangles please\n";
+		return false;
+	}
 	for (auto& word : words)
 	{
 		split(word, m_faceWords, '/');
@@ -124,11 +128,11 @@ bool ParsedObject::addComplexFace(std::vector<std::string>& words, std::vector<f
 			{
 				if (m_faceWords.size() > 1) // n/n
 				{
-					m_tmpFaces[countFaces].vtx = std::stoi(m_faceWords[0]);
-					m_tmpFaces[countFaces].txt = std::stoi(m_faceWords[1]);
+					m_tmpFaces[countFaces].vtx = static_cast<unsigned int>(std::stoi(m_faceWords[0]));
+					m_tmpFaces[countFaces].txt = static_cast<unsigned int>(std::stoi(m_faceWords[1]));
 				}
 				if (m_faceWords.size() > 2) // n/n/n
-					m_tmpFaces[countFaces].nrm = std::stoi(m_faceWords[2]);
+					m_tmpFaces[countFaces].nrm = static_cast<unsigned int>(std::stoi(m_faceWords[2]));
 				countFaces++;
 			}
 				
@@ -147,6 +151,8 @@ bool ParsedObject::addComplexFace(std::vector<std::string>& words, std::vector<f
 	}
 	else if (countFaces == kSquareCount) // need to mix in triangle 
 	{
+		if (m_tmpFaces.size() < 4)
+			std::cout << "error with faces\n";
 		faces.push_back(m_tmpFaces[0]);
 		faces.push_back(m_tmpFaces[1]);
 		faces.push_back(m_tmpFaces[2]);
@@ -243,10 +249,10 @@ void ParsedObject::parseFile(ModelState& modelState)
 				return ;
 		}
 	}
-	std::cout << "Faces count: " << faces.size() << std::endl;
-	std::cout << "Vertices count: " << vertices.size() << std::endl;
-	std::cout << "Text_coord count: " << text_coord.size() << std::endl;
-	std::cout << "Normals count: " << normals.size() << std::endl;
+	// std::cout << "Faces count: " << faces.size() << std::endl;
+	// std::cout << "Vertices count: " << vertices.size() << std::endl;
+	// std::cout << "Text_coord count: " << text_coord.size() << std::endl;
+	// std::cout << "Normals count: " << normals.size() << std::endl;
 	for (auto f : faces)
 	{
 		if (f.vtx)
@@ -284,11 +290,8 @@ void ParsedObject::parseFile(ModelState& modelState)
 			}
 		}
 	}
-	std::cout << "offset: " << modelState.centerOffset.x << " " << modelState.centerOffset.y << " "<< modelState.centerOffset.z << std::endl; 
-	std::cout << "countVert: " << countVert << std::endl;
 	if (countVert)
 		modelState.centerOffset /= countVert;
-	std::cout << "offset after div: " << modelState.centerOffset.x << " " << modelState.centerOffset.y << " "<< modelState.centerOffset.z  << std::endl; 
 }
 void ParsedObject::generateIndeces()
 {
@@ -318,11 +321,8 @@ void ParsedObject::generateIndeces()
 		}
 		idx++;
 	}
-}
 
-// 0 1 2 3 4 5 6 7
-// 8 9 0 1 2 3 4 5
-// 6 7 8 9 0 1 2 3 
+}
 
 void ParsedObject::generateNormals()
 {

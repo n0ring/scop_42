@@ -1,4 +1,6 @@
-obj/Shader.o: src/Shader.cpp \
+obj/Shader.o: \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/share/asan_ignorelist.txt \
+  src/Shader.cpp \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/fstream \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__availability \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \
@@ -555,6 +557,8 @@ obj/Shader.o: src/Shader.cpp \
   include/glm/detail/type_half.inl include/glm/geometric.hpp \
   include/glm/matrix.hpp include/glm/vector_relational.hpp \
   include/glm/integer.hpp include/glm/detail/func_integer.inl
+
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/share/asan_ignorelist.txt:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/fstream:
 

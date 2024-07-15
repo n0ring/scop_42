@@ -1,4 +1,6 @@
-obj/ObjectRenderer.o: src/ObjectRenderer.cpp include/ObjectRenderer.hpp \
+obj/ObjectRenderer.o: \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/share/asan_ignorelist.txt \
+  src/ObjectRenderer.cpp include/ObjectRenderer.hpp \
   include/imgui/imgui.h include/imgui/imconfig.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/float.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \
@@ -581,6 +583,8 @@ obj/ObjectRenderer.o: src/ObjectRenderer.cpp include/ObjectRenderer.hpp \
   include/glm/./ext/matrix_transform.inl \
   include/glm/gtc/matrix_transform.inl include/glm/gtc/../geometric.hpp \
   include/glm/gtc/../trigonometric.hpp include/glm/gtc/../matrix.hpp
+
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/share/asan_ignorelist.txt:
 
 include/ObjectRenderer.hpp:
 

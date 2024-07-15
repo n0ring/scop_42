@@ -1,4 +1,6 @@
-obj/Renderer.o: src/Renderer.cpp include/Renderer.hpp include/glad/glad.h \
+obj/Renderer.o: \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/share/asan_ignorelist.txt \
+  src/Renderer.cpp include/Renderer.hpp include/glad/glad.h \
   include/KHR/khrplatform.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/stdint.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \
@@ -553,6 +555,8 @@ obj/Renderer.o: src/Renderer.cpp include/Renderer.hpp include/glad/glad.h \
   include/glm/detail/type_half.inl include/glm/geometric.hpp \
   include/glm/matrix.hpp include/glm/vector_relational.hpp \
   include/glm/integer.hpp include/glm/detail/func_integer.inl
+
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/share/asan_ignorelist.txt:
 
 include/Renderer.hpp:
 

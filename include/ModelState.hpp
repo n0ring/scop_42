@@ -27,10 +27,14 @@ struct ModelState
 	RenderMode renderMode = RenderMode::COLOR;
 	glm::vec3 centerOffset;
 	bool hasNormals = false;
+	glm::vec3 lightPos;
+	bool lightOn = false;
 
 	ModelState() : scale(1.0f, 1.0f, 1.0f), 
 		translation(glm::vec3(0.5f)), 
-		centerOffset(glm::vec3(0.0f)) {}
+		centerOffset(glm::vec3(0.0f)),
+		lightPos(0.0f, 10.0f, 3.0f)
+		{}
 
 	void moveX(float val)
 	{
@@ -134,6 +138,25 @@ struct ModelState
 
 	void changeToTexture()
 	{
+		renderMode = RenderMode::TEXTURE;
+	}
+
+	void lumos()
+	{
+		lightOn = true;
+	}
+
+	void nox()
+	{
+		lightOn = false;
+	}
+
+	void setElder()
+	{
+		translation = glm::vec3(3.4f, 1.7f, 0.5f);
+		scale = glm::vec3(0.51f, 0.51f, 0.51f);
+		rotation_x = 79.001f;
+		rotation_y = 65.001f;
 		renderMode = RenderMode::TEXTURE;
 	}
 };

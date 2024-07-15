@@ -20,14 +20,17 @@
 class ObjectRenderer
 {
 public:
-	ObjectRenderer(const std::string& objectFileName);
-	~ObjectRenderer() {}
+	ObjectRenderer(const std::string& objectFileName, const std::string& shaderFileName, const std::string& textureFileName);
+	~ObjectRenderer() {
+	}
 	void onUpdate(float deltaTime);
 	void onRender();
 	void onImGuiRender(int& fill);
 
+	glm::vec3 getObjectCenter();
 	inline ModelState& getModelState() {return m_modelState;}
 	inline bool isObjectValid() {return m_objectState; }
+
 
 private:
 	std::unique_ptr<VertexArray> m_VAO;
@@ -42,6 +45,6 @@ private:
 
 	glm::vec3 view_vec;
 	ModelState m_modelState;
-	ParsedObject m_parsedObject;
+	std::unique_ptr<ParsedObject> m_parsedObject;
 	bool m_objectState = false;
 };

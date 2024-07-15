@@ -7,17 +7,37 @@
             "args": [
                 "-fcolor-diagnostics",
                 "-fansi-escape-codes",
-                "--std=c++14",
+                "--std=c++17 -Wno-deprecated -MD -MP -I include -I include/imgui",
+                "-L./lib -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo",
                 "-g",
-                "${file}",
+                "src/main.cpp",
+				"src/glad.c",
+				"src/Renderer.cpp",
+				"src/VertexBuffer.cpp",
+				"src/IndexBuffer.cpp",
+				"src/VertexArray.cpp",
+				"src/Shader.cpp",
+				"src/stb_image.cpp",
+				"src/Texture.cpp",
+				"src/imgui.cpp",
+				"src/imgui_demo.cpp",
+				"src/imgui_draw.cpp",
+				"src/imgui_tables.cpp",
+				"src/imgui_widgets.cpp",
+				"src/imgui_impl_glfw.cpp",
+				"src/imgui_impl_opengl3.cpp",
+				"src/ParsedObject.cpp",
+				"src/ObjectRenderer.cpp",
+				"src/KeyboardManager.cpp",
+				"src/BmpLoader.cpp",
                 "-o",
-                "${fileDirname}/${fileBasenameNoExtension}"
+                "opengl_test"
             ],
             "options": {
-                "cwd": "${fileDirname}"
+                "cwd": "/Users/aleksandr/Desktop/42/opengl/hello_world"
             },
             "problemMatcher": [
-                "$gcc"
+                "clang++"
             ],
             "group": {
                 "kind": "build",

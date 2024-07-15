@@ -1,4 +1,6 @@
-obj/main.o: src/main.cpp include/imgui/imgui.h include/imgui/imconfig.h \
+obj/main.o: \
+  /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/share/asan_ignorelist.txt \
+  src/main.cpp include/imgui/imgui.h include/imgui/imconfig.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/float.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__config_site \
@@ -582,6 +584,8 @@ obj/main.o: src/main.cpp include/imgui/imgui.h include/imgui/imconfig.h \
   include/glm/gtc/../trigonometric.hpp include/glm/gtc/../matrix.hpp \
   include/ParsedObject.hpp include/ModelState.hpp \
   include/ObjectRenderer.hpp include/KeyboardManager.hpp
+
+/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/clang/14.0.0/share/asan_ignorelist.txt:
 
 include/imgui/imgui.h:
 

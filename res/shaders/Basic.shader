@@ -46,15 +46,13 @@ uniform vec4 our_color;
 uniform sampler2D u_Texture;
 uniform int u_RenderMode;
 uniform int u_HasNormal;
+uniform int u_Light;
+uniform vec3 u_lightPos;
 
-
-// uniform vec3 lightPos;    // Позиция источника света
-// uniform vec3 viewPos;     // Позиция камеры/наблюдателя
-// uniform vec3 lightColor;  // Цвет света
-// uniform vec3 objectColor; // Цвет объекта
 vec4 getNormalColor() {
-	vec3 lightPos = vec3(0.0, 10.0, 3.0);
-	vec3 viewPos = vec3(0.0, 0.0, 0.0);
+	// vec3 lightPos = vec3(0.0, 10.0, 3.0);
+	vec3 lightPos = u_lightPos;
+	vec3 viewPos = vec3(0.0, 0.0, -7.0);
 	vec3 lightColor = vec3(1.0, 1.0, 1.0);
 	vec3 objectColor = vec3(1.0f, 1.0f, 1.0f);
 
@@ -80,14 +78,14 @@ vec4 getNormalColor() {
 void main() {
 	if (u_RenderMode == 0) // color
 	{
-		if (u_HasNormal == 1)
+		if (u_HasNormal == 1 && u_Light == 1)
 			color = vec4(getNormalColor() * v_ColorCoord);
 		else 
 			color = vec4(v_ColorCoord);
 	}
 	else  // texture
 	{
-		if (u_HasNormal == 1)
+		if (u_HasNormal == 1 && u_Light == 1)
 			color = vec4(getNormalColor() * vec4(texture(u_Texture, TexCoord)));
 		else 
 			color = vec4(texture(u_Texture, TexCoord));

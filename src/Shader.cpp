@@ -38,6 +38,11 @@ void Shader::setUniformMat4f(const std::string &name, glm::mat4 &matrix)
 	glUniformMatrix4fv(getUniformLocation(name), 1, GL_FALSE, &matrix[0][0]);
 }
 
+void Shader::setUniformVec3(const std::string &name, glm::vec3 data)
+{
+	glUniform3f(getUniformLocation(name), data.x, data.y, data.z);
+}
+
 int Shader::getUniformLocation(const std::string &name)
 {
 	if (m_uniformLocationCache.count(name))

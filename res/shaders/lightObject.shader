@@ -46,9 +46,12 @@ uniform vec4 our_color;
 uniform sampler2D u_Texture;
 uniform int u_RenderMode;
 uniform int u_HasNormal;
-uniform vec3 u_lightPos;
+uniform int u_Light;
+
 
 void main() {
+	if (u_Light == 1) // just to remove error
+	{}
 	if (u_RenderMode == 0) // color
 	{
 		if (u_HasNormal == 1)

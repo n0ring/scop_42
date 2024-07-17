@@ -292,6 +292,7 @@ void ParsedObject::parseFile(ModelState& modelState)
 	}
 	if (countVert)
 		modelState.centerOffset = modelState.centerOffset / countVert;
+	
 }
 void ParsedObject::generateIndeces()
 {

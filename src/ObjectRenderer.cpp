@@ -48,11 +48,12 @@ void ObjectRenderer::onRender()
 	m_texture->bind();
 	model = nrg::translate(model, m_modelState.centerOffset);
 	model = nrg::translate(model, m_modelState.translation); // move model. rotate have to be after move 
-	model = nrg::translate(model, m_modelState.centerOffset * -1.0f);
 
 
 	model = nrg::rotate(model, nrg::radians(m_modelState.rotation_x), nrg::vec3(0.0f, 1.0f, 0.0f));
 	model = nrg::rotate(model, nrg::radians(m_modelState.rotation_y), nrg::vec3(1.0f, 0.0f, 0.0f));
+	model = nrg::translate(model, m_modelState.centerOffset * -1.0f);
+	
 	model = nrg::scale(model, m_modelState.scale);
 
 	m_view = nrg::translate(nrg::mat4(1.0f), view_vec);

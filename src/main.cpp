@@ -1,7 +1,3 @@
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
 #include "glad/glad.h"
 #include <GLFW/glfw3.h>
 #include <iostream>
@@ -15,15 +11,7 @@
 #include "Shader.hpp"
 #include "Renderer.hpp"
 #include "Texture.hpp"
-#include "test/TestClearColor.hpp"
-#include "test/TestTexture.hpp"
-
-
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
-
 #include "ParsedObject.hpp"
-#include "ObjectRenderer.hpp"
 
 #include "KeyboardManager.hpp"
 
@@ -75,11 +63,11 @@ int main(void)
 
 	ObjectRenderer lightRenderer("elder.obj", "res/shaders/lightObject.shader", "res/texture/elder_tex.jpg");
 
-	ObjectRenderer objectRenderer("teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
+	// ObjectRenderer objectRenderer("teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("teapot.obj"); // model states 
 	// ObjectRenderer objectRenderer("sword.obj"); // model states 
-	// ObjectRenderer objectRenderer("ship.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp");
-	// ObjectRenderer objectRenderer("42.obj", "res/shaders/Basic.shader"); // model states 
+	ObjectRenderer objectRenderer("ship.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp");
+	// ObjectRenderer objectRenderer("42.obj", "res/shaders/Basic.shader", "res/texture/elder_tex.jpg"); // model states 
 	// ObjectRenderer objectRenderer("cube.obj"); // model states 
 	// ObjectRenderer objectRenderer("new_cube.obj"); // model states 
 	// ObjectRenderer objectRenderer("res1/plane.obj"); // model states 

@@ -291,7 +291,7 @@ void ParsedObject::parseFile(ModelState& modelState)
 		}
 	}
 	if (countVert)
-		modelState.centerOffset /= countVert;
+		modelState.centerOffset = modelState.centerOffset / countVert;
 }
 void ParsedObject::generateIndeces()
 {
@@ -329,13 +329,13 @@ void ParsedObject::generateNormals()
 	for (int i = 23; i < m_positions.size(); i += 24)
 	{
 		// sides						x						y				z
-		glm::vec3 v0 = glm::vec3(m_positions[i - 23], m_positions[i - 22], m_positions[i - 21]); 
-		glm::vec3 v1 = glm::vec3(m_positions[i - 15], m_positions[i - 14], m_positions[i - 13]); 
-		glm::vec3 v2 = glm::vec3(m_positions[i - 7], m_positions[i - 6], m_positions[i - 5]); 
+		nrg::vec3 v0 = nrg::vec3(m_positions[i - 23], m_positions[i - 22], m_positions[i - 21]); 
+		nrg::vec3 v1 = nrg::vec3(m_positions[i - 15], m_positions[i - 14], m_positions[i - 13]); 
+		nrg::vec3 v2 = nrg::vec3(m_positions[i - 7], m_positions[i - 6], m_positions[i - 5]); 
 
-		glm::vec3 edge1 = v1 - v0;
-        glm::vec3 edge2 = v2 - v0;
-		glm::vec3 normal = glm::normalize(glm::cross(edge1, edge2));
+		nrg::vec3 edge1 = v1 - v0;
+        nrg::vec3 edge2 = v2 - v0;
+		nrg::vec3 normal = nrg::normalize(nrg::cross(edge1, edge2));
 		m_positions[i - 18] = normal.x;
 		m_positions[i - 17] = normal.y;
 		m_positions[i - 16] = normal.z;

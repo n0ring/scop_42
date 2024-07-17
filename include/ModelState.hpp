@@ -1,8 +1,9 @@
 #pragma once 
 
-#include "glm/glm.hpp"
-#include "glm/gtc/matrix_transform.hpp"
+// #include "glm/glm.hpp"
+// #include "glm/gtc/matrix_transform.hpp"
 
+#include "nrg_math.hpp"
 
 
 #define MOVE_STEP 1.0f
@@ -21,18 +22,18 @@ struct ModelState
 {
 	float rotation_x = 0.001f;
 	float rotation_y = 0.001f;
-	glm::vec3 scale;
+	nrg::vec3 scale;
 	bool fill_model = false;
-	glm::vec3 translation;
+	nrg::vec3 translation;
 	RenderMode renderMode = RenderMode::COLOR;
-	glm::vec3 centerOffset;
+	nrg::vec3 centerOffset;
 	bool hasNormals = false;
-	glm::vec3 lightPos;
+	nrg::vec3 lightPos;
 	bool lightOn = false;
 
 	ModelState() : scale(1.0f, 1.0f, 1.0f), 
-		translation(glm::vec3(0.5f)), 
-		centerOffset(glm::vec3(0.0f)),
+		translation(nrg::vec3(0.5f)), 
+		centerOffset(nrg::vec3(0.0f)),
 		lightPos(0.0f, 10.0f, 3.0f)
 		{}
 
@@ -153,8 +154,8 @@ struct ModelState
 
 	void setElder()
 	{
-		translation = glm::vec3(3.4f, 1.7f, 0.5f);
-		scale = glm::vec3(0.51f, 0.51f, 0.51f);
+		translation = nrg::vec3(3.4f, 1.7f, 0.5f);
+		scale = nrg::vec3(0.51f, 0.51f, 0.51f);
 		rotation_x = 79.001f;
 		rotation_y = 65.001f;
 		renderMode = RenderMode::TEXTURE;

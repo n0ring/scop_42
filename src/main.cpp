@@ -75,7 +75,7 @@ int main(void)
 
 	ObjectRenderer lightRenderer("elder.obj", "res/shaders/lightObject.shader", "res/texture/elder_tex.jpg");
 
-	// ObjectRenderer objectRenderer("teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
+	ObjectRenderer objectRenderer("teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("teapot.obj"); // model states 
 	// ObjectRenderer objectRenderer("sword.obj"); // model states 
 	// ObjectRenderer objectRenderer("ship.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp");
@@ -84,7 +84,7 @@ int main(void)
 	// ObjectRenderer objectRenderer("new_cube.obj"); // model states 
 	// ObjectRenderer objectRenderer("res1/plane.obj"); // model states 
 	// ObjectRenderer objectRenderer("res1/alienanimal.obj"); // model states 
-	ObjectRenderer objectRenderer("res1/castle.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
+	// ObjectRenderer objectRenderer("res1/castle.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("res1/spider.obj"); // model states 
 	// ObjectRenderer objectRenderer("res1/building.obj"); // model states 
 	// ObjectRenderer objectRenderer("res1/ohouse.obj", "res/shaders/Basic.shader"); // model states 

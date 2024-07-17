@@ -3,7 +3,8 @@
 #include <GLFW/glfw3.h>
 #include <iostream>
 #include <unordered_map>
-#include "glm/glm.hpp"
+// #include "glm/glm.hpp"
+#include "nrg_math.hpp"
 
 struct ShaderProgramSourse
 {
@@ -22,8 +23,8 @@ public:
 
 	void setUniform1i(const std::string &name, int value);
 	void setUniform4f(const std::string &name, float v0, float v1, float v2, float v3);
-	void setUniformMat4f(const std::string &name, glm::mat4& matrix);
-	void setUniformVec3(const std::string &name, glm::vec3 data);
+	void setUniformMat4f(const std::string &name, nrg::mat4& matrix);
+	void setUniformVec3(const std::string &name, nrg::vec3 data);
 
 
 

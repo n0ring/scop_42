@@ -439,8 +439,12 @@ obj/main.o: \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/cmath \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/__node_handle \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/optional \
-  include/glm/glm.hpp include/glm/detail/_fixes.hpp \
-  include/glm/detail/setup.hpp include/glm/detail/../simd/platform.h \
+  include/nrg_math.hpp include/Renderer.hpp include/Texture.hpp \
+  include/vendor/stb_image/stb_image.h include/BmpLoader.hpp \
+  include/test/TestClearColor.hpp include/test/Test.hpp \
+  include/test/TestTexture.hpp include/glm/glm.hpp \
+  include/glm/detail/_fixes.hpp include/glm/detail/setup.hpp \
+  include/glm/detail/../simd/platform.h \
   /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/cfloat \
   include/glm/fwd.hpp include/glm/detail/qualifier.hpp \
   include/glm/vec2.hpp include/glm/./ext/vector_bool2.hpp \
@@ -562,12 +566,9 @@ obj/main.o: \
   include/glm/detail/type_half.inl include/glm/geometric.hpp \
   include/glm/matrix.hpp include/glm/vector_relational.hpp \
   include/glm/integer.hpp include/glm/detail/func_integer.inl \
-  include/Renderer.hpp include/Texture.hpp \
-  include/vendor/stb_image/stb_image.h include/BmpLoader.hpp \
-  include/test/TestClearColor.hpp include/test/Test.hpp \
-  include/test/TestTexture.hpp include/glm/gtc/matrix_transform.hpp \
-  include/glm/gtc/../mat4x4.hpp include/glm/gtc/../vec2.hpp \
-  include/glm/gtc/../vec3.hpp include/glm/gtc/../vec4.hpp \
+  include/glm/gtc/matrix_transform.hpp include/glm/gtc/../mat4x4.hpp \
+  include/glm/gtc/../vec2.hpp include/glm/gtc/../vec3.hpp \
+  include/glm/gtc/../vec4.hpp \
   include/glm/gtc/../ext/matrix_projection.hpp \
   include/glm/./ext/../gtc/constants.hpp \
   include/glm/gtc/../ext/scalar_constants.hpp \
@@ -1477,6 +1478,22 @@ include/Shader.hpp:
 
 /Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/c++/v1/optional:
 
+include/nrg_math.hpp:
+
+include/Renderer.hpp:
+
+include/Texture.hpp:
+
+include/vendor/stb_image/stb_image.h:
+
+include/BmpLoader.hpp:
+
+include/test/TestClearColor.hpp:
+
+include/test/Test.hpp:
+
+include/test/TestTexture.hpp:
+
 include/glm/glm.hpp:
 
 include/glm/detail/_fixes.hpp:
@@ -1776,20 +1793,6 @@ include/glm/vector_relational.hpp:
 include/glm/integer.hpp:
 
 include/glm/detail/func_integer.inl:
-
-include/Renderer.hpp:
-
-include/Texture.hpp:
-
-include/vendor/stb_image/stb_image.h:
-
-include/BmpLoader.hpp:
-
-include/test/TestClearColor.hpp:
-
-include/test/Test.hpp:
-
-include/test/TestTexture.hpp:
 
 include/glm/gtc/matrix_transform.hpp:
 

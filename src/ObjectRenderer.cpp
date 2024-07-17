@@ -4,10 +4,13 @@
 ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::string& shaderFileName, const std::string& textureFileName) 
 	: m_translation(0, 0, 0),
 
-	m_proj(glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.01f, 200.0f)),
-	m_view(glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0))),
+	// m_proj(glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.01f, 200.0f)),
+	m_proj(nrg::vec4(1.358f, 0.0f, 0.0f, 0.0f),
+					 nrg::vec4(0.0f, 2.41421, 0.0f, 0.0f), 
+					 nrg::vec4(0.0f, 0.0f, -1.0001f, -1.0f), 
+					 nrg::vec4(0.0f, 0.0f, -0.020001, 0.0f)),
+	m_view(nrg::translate(nrg::mat4(1.0f), nrg::vec3(0, 0, 0))),
 	view_vec(0, 0, -7)
-	// m_parsedObject(objectFileName, m_modelState)
 {
 	m_parsedObject = std::make_unique<ParsedObject>(objectFileName, m_modelState);
 	if (m_parsedObject->getParseStatus() == false)
@@ -39,21 +42,21 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::str
 
 void ObjectRenderer::onRender()
 {
-	glm::mat4 model(1.0f);
+	nrg::mat4 model(1.0f);
 
 	Renderer renderer;
 	m_texture->bind();
-	model = glm::translate(model, m_modelState.centerOffset);
-	model = glm::translate(model, m_modelState.translation); // move model. rotate have to be after move 
-	model = glm::translate(model, -m_modelState.centerOffset);
+	model = nrg::translate(model, m_modelState.centerOffset);
+	model = nrg::translate(model, m_modelState.translation); // move model. rotate have to be after move 
+	model = nrg::translate(model, m_modelState.centerOffset * -1.0f);
 
 
-	model = glm::rotate(model, glm::radians(m_modelState.rotation_x), glm::vec3(0.0f, 1.0f, 0.0f));
-	model = glm::rotate(model, glm::radians(m_modelState.rotation_y), glm::vec3(1.0f, 0.0f, 0.0f));
-	model = glm::scale(model, m_modelState.scale);
+	model = nrg::rotate(model, nrg::radians(m_modelState.rotation_x), nrg::vec3(0.0f, 1.0f, 0.0f));
+	model = nrg::rotate(model, nrg::radians(m_modelState.rotation_y), nrg::vec3(1.0f, 0.0f, 0.0f));
+	model = nrg::scale(model, m_modelState.scale);
 
-	m_view = glm::translate(glm::mat4(1.0f), view_vec);
-	glm::mat4 mvp = m_proj * m_view * model;
+	m_view = nrg::translate(nrg::mat4(1.0f), view_vec);
+	nrg::mat4 mvp = m_proj * m_view * model;
 	m_shader->bind();
 	m_shader->setUniformMat4f("u_MVP", mvp);
 	m_shader->setUniformMat4f("u_model", model);
@@ -73,18 +76,18 @@ void ObjectRenderer::onImGuiRender(int& fill)
 {
 }
 
-glm::vec3 ObjectRenderer::getObjectCenter()
+nrg::vec3 ObjectRenderer::getObjectCenter()
 {
-	glm::mat4 model(1.0f);
-	glm::vec4 localCenter = glm::vec4(0.0f, 0.0f, 0.0f, 1.0f);
+	nrg::mat4 model(1.0f);
+	nrg::vec4 localCenter = nrg::vec4(0.0f, 0.0f, 0.0f, 1.0f);
 
-	model = glm::translate(model, m_modelState.centerOffset);
-	model = glm::translate(model, m_modelState.translation); // move model. rotate have to be after move 
-	model = glm::translate(model, -m_modelState.centerOffset);
-	model = glm::scale(model, m_modelState.scale);
-	m_view = glm::translate(glm::mat4(1.0f), view_vec);
+	model = nrg::translate(model, m_modelState.centerOffset);
+	model = nrg::translate(model, m_modelState.translation); // move model. rotate have to be after move 
+	model = nrg::translate(model, m_modelState.centerOffset * -1);
+	model = nrg::scale(model, m_modelState.scale);
+	m_view = nrg::translate(nrg::mat4(1.0f), view_vec);
 	// glm::mat4 mvp = m_proj * m_view * model;
 
-	glm::vec4 worldCenter = model * localCenter;
-	return glm::vec3(worldCenter);
+	nrg::vec4 worldCenter =  model * localCenter;
+	return nrg::vec3(worldCenter);
 }

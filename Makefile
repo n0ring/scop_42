@@ -18,6 +18,7 @@ SRC		=	$(addprefix src/,	main.cpp\
 								ObjectRenderer.cpp\
 								KeyboardManager.cpp\
 								BmpLoader.cpp\
+								nrg_math.cpp\
 								)
 OBJDIR	=	obj
 SRCDIR	=	src

@@ -63,12 +63,12 @@ public:
 	~ParsedObject() {}
 
 	
-	inline const std::vector<float>& getPositions() const {return m_positions; }
+	inline const std::vector<vertex>& getPositions() const {return m_positions; }
 	inline const std::vector<unsigned int>& getIndices() const {return m_indices; }
 	inline bool getParseStatus() const {return m_ParseStatus;}
 private:
 	std::string m_fileName;
-	std::vector<float> m_positions;
+	std::vector<vertex> m_positions;
 	std::vector<unsigned int> m_indices;
 	float m_countVert = 0;
 	float tmp_x, tmp_y, tmp_z;

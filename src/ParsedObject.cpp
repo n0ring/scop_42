@@ -138,8 +138,9 @@ bool ParsedObject::addComplexFace(std::vector<std::string>& words, std::vector<f
 	}
 	if (countFaces == kTriangleCount) // no need to mix faces 
 	{
-		for (auto& f : m_tmpFaces)
-			faces.push_back(f);
+		// for (auto& f : m_tmpFaces)
+		for (int i = 0; i < 3; i++)
+			faces.push_back(m_tmpFaces[i]);
 	}
 	else if (countFaces == kSquareCount) // need to mix in triangle 
 	{
@@ -243,13 +244,14 @@ void ParsedObject::parseFile(ModelState& modelState)
 	vertex tmpVtx;
 	for (auto f : faces)
 	{
-		m_positions.push_back(vertices[f.vtx].x);
-		m_positions.push_back(vertices[f.vtx].y);
-		m_positions.push_back(vertices[f.vtx].z);
-		if (f.txt != 0) // textures
+		tmpVtx.x = vertices[f.vtx].x;
+		tmpVtx.y = vertices[f.vtx].y;
+		tmpVtx.z = vertices[f.vtx].z;
+
+		if (!text_coord.empty()) // textures
 		{
-			m_positions.push_back(text_coord[f.txt].x);
-			m_positions.push_back(text_coord[f.txt].y);
+			tmpVtx.u = text_coord[f.txt].x;
+			tmpVtx.v = text_coord[f.txt].y;
 		}
 		else 
 		{
@@ -258,22 +260,13 @@ void ParsedObject::parseFile(ModelState& modelState)
 			acos(vertices[f.vtx].y / sqrt(vertices[f.vtx].x * vertices[f.vtx].x 
 				+ vertices[f.vtx].y * vertices[f.vtx].y 
 				+ vertices[f.vtx].z * vertices[f.vtx].z));
-			m_positions.push_back( (theta + M_PI) / (2.0f * M_PI)); // TODO texture calculate
-			m_positions.push_back(phi / M_PI);
+			tmpVtx.u = (theta + M_PI) / (2.0f * M_PI);
+			tmpVtx.v = phi / M_PI;
 		}
-		if (f.nrm)
-		{
-
-			m_positions.push_back(normals[f.nrm].x);
-			m_positions.push_back(normals[f.nrm].y);
-			m_positions.push_back(normals[f.nrm].z);
-		}
-		else 
-		{
-			m_positions.push_back(0);
-			m_positions.push_back(0);
-			m_positions.push_back(0);
-		}
+		tmpVtx.vnx = normals.empty() ? 0 : normals[f.nrm].x;
+		tmpVtx.vny = normals.empty() ? 0 : normals[f.nrm].y;
+		tmpVtx.vnz = normals.empty() ? 0 : normals[f.nrm].z;
+		m_positions.push_back(tmpVtx);
 	}
 	if (countVert)
 		modelState.centerOffset = modelState.centerOffset / countVert;
@@ -281,58 +274,36 @@ void ParsedObject::parseFile(ModelState& modelState)
 }
 void ParsedObject::generateIndeces()
 {
-	vertex vtx;
 	std::unordered_map<vertex, int, vertex_hash> mp; // [vtx, idx]
-	int idx = 0;
-	// every 5 vtx
-	for (int i = 7; i < m_positions.size(); i += 8)
+	for (int i = 0; i < m_positions.size(); i++)
 	{
-		vtx.x = m_positions[i - 7];
-		vtx.y = m_positions[i - 6];
-		vtx.z = m_positions[i - 5];
-		vtx.u = m_positions[i - 4];
-		vtx.v = m_positions[i - 3];
-		vtx.vnx = m_positions[i - 2];
-		vtx.vny = m_positions[i - 1];
-		vtx.vnz = m_positions[i];
-		
-		if (mp.count(vtx))
+		if (mp.count(m_positions[i]))
 		{
-			m_indices.push_back(mp[vtx]);
+			m_indices.push_back(mp[m_positions[i]]);
 		}
 		else 
 		{
-			mp[vtx] = idx;
-			m_indices.push_back(idx);
+			mp[m_positions[i]] = i;
+			m_indices.push_back(i);
 		}
-		idx++;
 	}
-
 }
 
 void ParsedObject::generateNormals()
 {
-	for (int i = 23; i < m_positions.size(); i += 24)
+	for (int i = 2; i < m_positions.size(); i += 3)
 	{
 		// sides						x						y				z
-		nrg::vec3 v0 = nrg::vec3(m_positions[i - 23], m_positions[i - 22], m_positions[i - 21]); 
-		nrg::vec3 v1 = nrg::vec3(m_positions[i - 15], m_positions[i - 14], m_positions[i - 13]); 
-		nrg::vec3 v2 = nrg::vec3(m_positions[i - 7], m_positions[i - 6], m_positions[i - 5]); 
+		nrg::vec3 v0 = nrg::vec3(m_positions[i - 2].x, m_positions[i - 2].y, m_positions[i - 2].z); 
+		nrg::vec3 v1 = nrg::vec3(m_positions[i - 1].x, m_positions[i - 1].y, m_positions[i - 1].z); 
+		nrg::vec3 v2 = nrg::vec3(m_positions[i].x, m_positions[i].y, m_positions[i].z); 
 
 		nrg::vec3 edge1 = v1 - v0;
         nrg::vec3 edge2 = v2 - v0;
 		nrg::vec3 normal = nrg::normalize(nrg::cross(edge1, edge2));
-		m_positions[i - 18] = normal.x;
-		m_positions[i - 17] = normal.y;
-		m_positions[i - 16] = normal.z;
-
-		m_positions[i - 10] = normal.x;
-		m_positions[i - 9] = normal.y;
-		m_positions[i - 8] = normal.z;
-
-		m_positions[i - 2] = normal.x;
-		m_positions[i - 1] = normal.y;
-		m_positions[i - 0] = normal.z;
+		m_positions[i - 2].vnx = m_positions[i - 1].vnx = m_positions[i].vnx = normal.x;
+		m_positions[i - 2].vny = m_positions[i - 1].vny = m_positions[i].vny = normal.y;
+		m_positions[i - 2].vnz = m_positions[i - 1].vnz = m_positions[i].vnz = normal.z;
 	}
 }
 

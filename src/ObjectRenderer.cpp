@@ -20,12 +20,12 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::str
 	m_VAO = std::make_unique<VertexArray>();
 
 
-	m_VBO = std::make_unique<VertexBuffer>(m_parsedObject->getPositions().data(), m_parsedObject->getPositions().size() * sizeof(float));
+	m_VBO = std::make_unique<VertexBuffer>(m_parsedObject->getPositions().data(), m_parsedObject->getPositions().size() * sizeof(vertex));
 	VertexBufferLayout layouts;
 	layouts.push<float>(3); // size of data 
 	layouts.push<float>(2); // tex coords
 	layouts.push<float>(3); // normals coords
-	m_VAO->addBuffer(*m_VBO, layouts, m_parsedObject->getPositions().size());
+	m_VAO->addBuffer(*m_VBO, layouts, m_parsedObject->getPositions().size() * 8);
 	m_IBO = std::make_unique<IndexBuffer>(m_parsedObject->getIndices().data(), m_parsedObject->getIndices().size());
 
 	m_shader = std::make_unique<Shader>(shaderFileName);
@@ -53,7 +53,7 @@ void ObjectRenderer::onRender()
 	model = nrg::rotate(model, nrg::radians(m_modelState.rotation_x), nrg::vec3(0.0f, 1.0f, 0.0f));
 	model = nrg::rotate(model, nrg::radians(m_modelState.rotation_y), nrg::vec3(1.0f, 0.0f, 0.0f));
 	model = nrg::translate(model, m_modelState.centerOffset * -1.0f);
-	
+
 	model = nrg::scale(model, m_modelState.scale);
 
 	m_view = nrg::translate(nrg::mat4(1.0f), view_vec);

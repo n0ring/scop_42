@@ -53,7 +53,7 @@ int main(void)
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-	std::cout << glGetString(GL_VERSION) << std::endl;
+	// std::cout << glGetString(GL_VERSION) << std::endl;
 
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
@@ -66,11 +66,12 @@ int main(void)
 	// ObjectRenderer objectRenderer("teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("teapot.obj"); // model states 
 	// ObjectRenderer objectRenderer("sword.obj"); // model states 
-	// ObjectRenderer objectRenderer("ship.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp");
+	ObjectRenderer objectRenderer("ship.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp");
 	// ObjectRenderer objectRenderer("42.obj", "res/shaders/Basic.shader", "res/texture/elder_tex.jpg"); // model states 
-	// ObjectRenderer objectRenderer("cube.obj"); // model states 
-	ObjectRenderer objectRenderer("new_cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("res1/plane.obj"); // model states 
+	// ObjectRenderer objectRenderer("cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
+	// ObjectRenderer objectRenderer("new_cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
+	// ObjectRenderer objectRenderer("test_cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
+	// ObjectRenderer objectRenderer("res1/plane.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("res1/alienanimal.obj"); // model states 
 	// ObjectRenderer objectRenderer("res1/castle.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("res1/spider.obj"); // model states 
@@ -82,6 +83,8 @@ int main(void)
 	{
 		return -1;
 	}
+
+
 	
 	glfwSetKeyCallback(window, key_callback);
 		glEnable(GL_BLEND);

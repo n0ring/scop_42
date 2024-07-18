@@ -8,8 +8,8 @@ out vec4 v_ColorCoord;
 uniform mat4 u_MVP;
 uniform mat4 u_model;
 out vec2 TexCoord;
-out vec3 FragPos;    // Позиция фрагмента
-out vec3 Normal;     // Нормаль фрагмента
+out vec3 FragPos;
+out vec3 Normal;
 
 
 
@@ -23,10 +23,10 @@ vec4 getColorFromPosition(vec4 poss) {
 }
 
 void main(){
+
 	gl_Position = u_MVP * pos; 
 	TexCoord = aTexCoord; // texture
 	v_ColorCoord = getColorFromPosition(normalize(pos));
-	// Позиция и нормаль для фрагментного шейдера
     FragPos = vec3(u_model * pos);
     Normal = mat3(transpose(inverse(u_model))) *  normalize(aNormCoord);
 }

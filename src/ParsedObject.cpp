@@ -27,19 +27,6 @@ void ParsedObject::split(std::string& line, std::vector<std::string>& words, cha
 }
 
 
-void addPos(std::vector<float>& arr, Pos& minPos, Pos& maxPos, float curX, float curY, float curZ)
-{
-	minPos.x = std::min(curX, minPos.x);
-	minPos.y = std::min(curY, minPos.y);
-	minPos.z = std::min(curZ, minPos.z);
-	maxPos.x = std::max(curX, maxPos.x);
-	maxPos.y = std::max(curY, maxPos.y);
-	maxPos.z = std::max(curZ, maxPos.z);
-	arr.push_back(curX);
-	arr.push_back(curY);
-	arr.push_back(curZ);
-}
-
 bool isLineValid(std::vector<std::string>& words)
 {
 	if (words.empty())
@@ -202,9 +189,6 @@ void ParsedObject::parseFile(ModelState& modelState)
 	std::vector<textPos> text_coord;
 	std::vector<face> faces;
 	std::vector<Pos> normals;
-	// float x, y, z;
-	Pos minPos = {100000, 10000, 10000};
-	Pos maxPos = {-10000, -10000, -10000};
 	float countVert = 0;
 
 	int debug_count = 0;
@@ -365,3 +349,14 @@ ParsedObject::ParsedObject(std::string fileName, ModelState& modelState) : m_fil
 		std::cout << "Log: Parse done for file: " << fileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;
 	}
 }
+
+
+
+/* 
+i need to know for each fragpos which material use
+1. add all data to every vertex as one more positions (which is stupid)
+2. use some kind of indeces as arr/map for every material
+2.1 use struct material {}
+2.2 on parse shader change var to set arrays of materials
+
+*/

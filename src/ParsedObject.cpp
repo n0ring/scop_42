@@ -37,16 +37,16 @@ bool isLineValid(std::vector<std::string>& words)
 	if (words.empty())
 		return false;
 	std::string& token = words[0];
-	return token == "v" || token == "f" || token == "vt" || token == "vn";
+	return token == "v" || token == "f" || token == "vt" || token == "vn" || token == "usemtl";
 }
 
 bool ParsedObject::addVertex(std::vector<std::string>& words, std::vector<Pos>& vertices, ModelState& modelState)
 {
 	try
 	{
-		tmp_x = std::stof(words[kIdxXData]);
-		tmp_y = std::stof(words[kIdxYData]);
-		tmp_z = std::stof(words[kIdxZData]);
+		tmpPos.x = std::stof(words[kIdxXData]);
+		tmpPos.y = std::stof(words[kIdxYData]);
+		tmpPos.z = std::stof(words[kIdxZData]);
 	}
 	catch(const std::exception& e)
 	{
@@ -56,10 +56,11 @@ bool ParsedObject::addVertex(std::vector<std::string>& words, std::vector<Pos>& 
 		std::cout << std::endl << std::endl;
 		return false;
 	}
-	vertices.push_back({tmp_x, tmp_y, tmp_z});
-	modelState.centerOffset.x += tmp_x;
-	modelState.centerOffset.y += tmp_y;
-	modelState.centerOffset.z += tmp_z;
+	
+	vertices.push_back(tmpPos);
+	modelState.centerOffset.x += tmpPos.x;
+	modelState.centerOffset.y += tmpPos.y;
+	modelState.centerOffset.z += tmpPos.z;
 	return true;
 }
 
@@ -67,9 +68,9 @@ bool ParsedObject::addNormals(std::vector<std::string>& words, std::vector<Pos>&
 {
 	try
 	{
-		tmp_x = std::stof(words[kIdxXData]);
-		tmp_y = std::stof(words[kIdxYData]);
-		tmp_z = std::stof(words[kIdxZData]);
+		tmpPos.x = std::stof(words[kIdxXData]);
+		tmpPos.y = std::stof(words[kIdxYData]);
+		tmpPos.z = std::stof(words[kIdxZData]);
 	}
 	catch(const std::exception& e)
 	{
@@ -79,7 +80,7 @@ bool ParsedObject::addNormals(std::vector<std::string>& words, std::vector<Pos>&
 		std::cout << std::endl << std::endl;
 		return false;
 	}
-	normals.push_back({tmp_x, tmp_y, tmp_z});
+	normals.push_back(tmpPos);
 	return true;
 }
 
@@ -87,8 +88,8 @@ bool ParsedObject::addTextureCoord(std::vector<std::string>& words, std::vector<
 {
 	try
 	{
-		tmp_x = std::stof(words[1]);
-		tmp_y = std::stof(words[2]);
+		tmpTexPos.x = std::stof(words[1]);
+		tmpTexPos.y = std::stof(words[2]);
 	}
 	catch(const std::exception& e)
 	{
@@ -98,7 +99,7 @@ bool ParsedObject::addTextureCoord(std::vector<std::string>& words, std::vector<
 		std::cout << std::endl << std::endl;
 		return false;
 	}
-	text_coord.push_back({tmp_x, tmp_y});
+	text_coord.push_back(tmpTexPos);
 	return true;
 }
 
@@ -138,7 +139,6 @@ bool ParsedObject::addComplexFace(std::vector<std::string>& words, std::vector<f
 	}
 	if (countFaces == kTriangleCount) // no need to mix faces 
 	{
-		// for (auto& f : m_tmpFaces)
 		for (int i = 0; i < 3; i++)
 			faces.push_back(m_tmpFaces[i]);
 	}
@@ -187,13 +187,14 @@ bool ParsedObject::addSimpleFace(std::vector<std::string>& words, std::vector<fa
 void ParsedObject::parseFile(ModelState& modelState)
 {
 	std::string line;
-	std::ifstream file(m_fileName);
+	std::ifstream file(m_objFileName);
 	std::vector<std::string> words;
 	std::vector<Pos> vertices;
 	std::vector<textPos> text_coord;
 	std::vector<face> faces;
 	std::vector<Pos> normals;
 	float countVert = 0;
+	float mtlCount = 0;
 
 	int debug_count = 0;
 	if (file.is_open() == false)
@@ -232,6 +233,19 @@ void ParsedObject::parseFile(ModelState& modelState)
 					modelState.hasNormals = true;
 				m_ParseStatus = addNormals(words, normals);
 			}
+			else if (words[kIdxTypeData] == kMtlData)
+			{
+				if (m_materialMap.count(words[kIdxMaterial]))
+					m_curMtlIdx = m_materialMap[words[kIdxMaterial]];
+				else 
+				{
+					mtlCount++;
+					m_materialMap[words[kIdxMaterial]] = mtlCount;
+				}
+				m_curMtlIdx = m_materialMap[words[kIdxMaterial]];
+				m_tmpFace.mtl = m_curMtlIdx;
+				tmpTexPos.mtl = m_curMtlIdx;
+			}
 
 			if (m_ParseStatus == false)
 				return ;
@@ -266,6 +280,7 @@ void ParsedObject::parseFile(ModelState& modelState)
 		tmpVtx.vnx = normals.empty() ? 0 : normals[f.nrm].x;
 		tmpVtx.vny = normals.empty() ? 0 : normals[f.nrm].y;
 		tmpVtx.vnz = normals.empty() ? 0 : normals[f.nrm].z;
+		tmpVtx.mtl = f.mtl ? f.mtl : vertices[f.vtx].mtl; // if face hasn't not default (0) then use from vtx 
 		m_positions.push_back(tmpVtx);
 	}
 	if (countVert)
@@ -299,7 +314,7 @@ void ParsedObject::generateNormals()
 		nrg::vec3 v2 = nrg::vec3(m_positions[i].x, m_positions[i].y, m_positions[i].z); 
 
 		nrg::vec3 edge1 = v1 - v0;
-        nrg::vec3 edge2 = v2 - v0;
+		nrg::vec3 edge2 = v2 - v0;
 		nrg::vec3 normal = nrg::normalize(nrg::cross(edge1, edge2));
 		m_positions[i - 2].vnx = m_positions[i - 1].vnx = m_positions[i].vnx = normal.x;
 		m_positions[i - 2].vny = m_positions[i - 1].vny = m_positions[i].vny = normal.y;
@@ -307,7 +322,7 @@ void ParsedObject::generateNormals()
 	}
 }
 
-ParsedObject::ParsedObject(std::string fileName, ModelState& modelState) : m_fileName(fileName), m_tmpFaces(4)
+ParsedObject::ParsedObject(std::string objFileName, ModelState& modelState) : m_objFileName(objFileName), m_tmpFaces(4)
 {
 	parseFile(modelState);
 	if (m_ParseStatus)
@@ -318,7 +333,7 @@ ParsedObject::ParsedObject(std::string fileName, ModelState& modelState) : m_fil
 			modelState.hasNormals = true;
 		}
 		generateIndeces();
-		std::cout << "Log: Parse done for file: " << fileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;
+		std::cout << "Log: Parse done for file: " << m_objFileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;
 	}
 }
 
@@ -330,5 +345,8 @@ i need to know for each fragpos which material use
 2. use some kind of indeces as arr/map for every material
 2.1 use struct material {}
 2.2 on parse shader change var to set arrays of materials
+
+map [materialname, idx]
+to m_positions (vertex) add idx float for material 
 
 */

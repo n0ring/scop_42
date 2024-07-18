@@ -4,6 +4,7 @@ SRC		=	$(addprefix src/,	main.cpp\
 								VertexBuffer.cpp\
 								IndexBuffer.cpp\
 								VertexArray.cpp\
+								UniformBuffer.cpp\
 								Shader.cpp\
 								stb_image.cpp\
 								Texture.cpp\

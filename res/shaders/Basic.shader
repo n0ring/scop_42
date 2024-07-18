@@ -3,6 +3,7 @@
 layout(location = 0) in vec4 pos;
 layout(location = 1) in vec2 aTexCoord;
 layout(location = 2) in vec3 aNormCoord;
+layout(location = 3) in float aMtlIdx;
 
 out vec4 v_ColorCoord;
 uniform mat4 u_MVP;
@@ -10,8 +11,6 @@ uniform mat4 u_model;
 out vec2 TexCoord;
 out vec3 FragPos;
 out vec3 Normal;
-
-
 
 vec4 getColorFromPosition(vec4 poss) {
     return vec4(
@@ -42,12 +41,27 @@ in vec2 TexCoord;
 in vec3 FragPos;    // Позиция фрагмента, интерполированная из вершинного шейдера
 in vec3 Normal;     // Нормаль фрагмента, интерполированная из вершинного шейдера
 
+struct Material
+{
+	float Ns;
+	vec3 ka;
+	vec3 kd;
+	vec3 ks;
+	float ni;
+	float d;
+	unsigned int illum;
+};
+
+
 uniform vec4 our_color;
 uniform sampler2D u_Texture;
 uniform int u_RenderMode;
 uniform int u_HasNormal;
 uniform int u_Light;
 uniform vec3 u_lightPos;
+layout(std140) uniform Materials {
+    Material materials[1];
+};
 
 vec4 getNormalColor() {
 	// vec3 lightPos = vec3(0.0, 10.0, 3.0);
@@ -81,7 +95,8 @@ void main() {
 		if (u_HasNormal == 1 && u_Light == 1)
 			color = vec4(getNormalColor() * v_ColorCoord);
 		else 
-			color = vec4(v_ColorCoord);
+			// color = vec4(v_ColorCoord);
+			color = vec4(materials[0].color, 1.0f);
 	}
 	else  // texture
 	{
@@ -91,6 +106,7 @@ void main() {
 			color = vec4(texture(u_Texture, TexCoord));
 	}
 }
+
 
 
 

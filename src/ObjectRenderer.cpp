@@ -11,21 +11,23 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::str
 					 nrg::vec4(0.0f, 0.0f, -0.020001, 0.0f)),
 	m_view(nrg::translate(nrg::mat4(1.0f), nrg::vec3(0, 0, 0))),
 	view_vec(0, 0, -7)
-{
+{	
 	m_parsedObject = std::make_unique<ParsedObject>(objectFileName, m_modelState);
 	if (m_parsedObject->getParseStatus() == false)
 		return ;
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	m_VAO = std::make_unique<VertexArray>();
-
+	if (objectFileName != "elder.obj")
+		m_UBO = std::make_unique<UniformBuffer>(m_parsedObject->getMaterials().data(), m_parsedObject->getMaterials().size());
 
 	m_VBO = std::make_unique<VertexBuffer>(m_parsedObject->getPositions().data(), m_parsedObject->getPositions().size() * sizeof(vertex));
 	VertexBufferLayout layouts;
 	layouts.push<float>(3); // size of data 
 	layouts.push<float>(2); // tex coords
 	layouts.push<float>(3); // normals coords
-	m_VAO->addBuffer(*m_VBO, layouts, m_parsedObject->getPositions().size() * 8);
+	layouts.push<float>(1); // mtl idx
+	m_VAO->addBuffer(*m_VBO, layouts, m_parsedObject->getPositions().size() * 9);
 	m_IBO = std::make_unique<IndexBuffer>(m_parsedObject->getIndices().data(), m_parsedObject->getIndices().size());
 
 	m_shader = std::make_unique<Shader>(shaderFileName);
@@ -36,7 +38,9 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::str
 	m_shader->setUniform1i("u_Texture", 0);
 	m_shader->setUniform1i("u_HasNormal", static_cast<int>(m_modelState.hasNormals));
 	m_shader->setUniform1i("u_RenderMode", static_cast<int>(RenderMode::COLOR));
-	m_shader->setUniform1i("u_Light", 0);	
+	m_shader->setUniform1i("u_Light", 0);
+	if (objectFileName != "elder.obj")
+		m_shader->setUniformbuffer("Materials", m_UBO->getRendererId());
 	m_objectState = true;
 }
 

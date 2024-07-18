@@ -9,6 +9,11 @@ faces in vectors of struct {IofV, IofVt}
 
 */
 
+unsigned int getFace(std::string& word)
+{
+	return static_cast<unsigned int>(std::stoi(word) - 1);
+}
+
 void ParsedObject::split(std::string& line, std::vector<std::string>& words, char div)
 {
 	size_t start = 0, end = 0;
@@ -101,7 +106,7 @@ bool ParsedObject::addComplexFace(std::vector<std::string>& words, std::vector<f
 {
 	int countFaces = 0;
 
-	if (words.size() > 4)
+	if (words.size() > 5)
 	{
 		std::cout << "incorrect file. Use only triangles please\n";
 		return false;
@@ -115,11 +120,11 @@ bool ParsedObject::addComplexFace(std::vector<std::string>& words, std::vector<f
 			{
 				if (m_faceWords.size() > 1) // n/n
 				{
-					m_tmpFaces[countFaces].vtx = static_cast<unsigned int>(std::stoi(m_faceWords[0]));
-					m_tmpFaces[countFaces].txt = static_cast<unsigned int>(std::stoi(m_faceWords[1]));
+					m_tmpFaces[countFaces].vtx = getFace(m_faceWords[0]);
+					m_tmpFaces[countFaces].txt = getFace(m_faceWords[1]);
 				}
 				if (m_faceWords.size() > 2) // n/n/n
-					m_tmpFaces[countFaces].nrm = static_cast<unsigned int>(std::stoi(m_faceWords[2]));
+					m_tmpFaces[countFaces].nrm = getFace(m_faceWords[2]);
 				countFaces++;
 			}
 				
@@ -156,29 +161,27 @@ bool ParsedObject::addSimpleFace(std::vector<std::string>& words, std::vector<fa
 	{
 		for (int i = 1; i < words.size(); i++)
 		{
-			m_tmpFace.vtx =  std::stoi(words[i]);
-			// TODO TXT 
+			m_tmpFace.vtx =  getFace(words[i]);
 			faces.push_back(m_tmpFace);
 		}
 	}
 	else if (words.size() - 1 == kSquareCount) // -1 for f in line
 	{
-		m_tmpFace.vtx =  std::stoi(words[1]);
+		m_tmpFace.vtx =  getFace(words[1]);
 		faces.push_back(m_tmpFace);
-		m_tmpFace.vtx =  std::stoi(words[2]);
+		m_tmpFace.vtx =  getFace(words[2]);
 		faces.push_back(m_tmpFace);
-		m_tmpFace.vtx =  std::stoi(words[3]);
+		m_tmpFace.vtx =  getFace(words[3]);
 		faces.push_back(m_tmpFace);
-		m_tmpFace.vtx =  std::stoi(words[1]);
+		m_tmpFace.vtx =  getFace(words[1]);
 		faces.push_back(m_tmpFace);
-		m_tmpFace.vtx =  std::stoi(words[3]);
+		m_tmpFace.vtx =  getFace(words[3]);
 		faces.push_back(m_tmpFace);
-		m_tmpFace.vtx =  std::stoi(words[4]);
+		m_tmpFace.vtx =  getFace(words[4]);
 		faces.push_back(m_tmpFace);
 	}
 	return true;
 }
-
 
 void ParsedObject::parseFile(ModelState& modelState)
 {
@@ -237,41 +240,39 @@ void ParsedObject::parseFile(ModelState& modelState)
 	// std::cout << "Vertices count: " << vertices.size() << std::endl;
 	// std::cout << "Text_coord count: " << text_coord.size() << std::endl;
 	// std::cout << "Normals count: " << normals.size() << std::endl;
+	vertex tmpVtx;
 	for (auto f : faces)
 	{
-		if (f.vtx)
+		m_positions.push_back(vertices[f.vtx].x);
+		m_positions.push_back(vertices[f.vtx].y);
+		m_positions.push_back(vertices[f.vtx].z);
+		if (f.txt != 0) // textures
 		{
-			m_positions.push_back(vertices[f.vtx - 1].x);
-			m_positions.push_back(vertices[f.vtx - 1].y);
-			m_positions.push_back(vertices[f.vtx - 1].z);
-			if (f.txt != 0) // textures
-			{
-				m_positions.push_back(text_coord[f.txt - 1].x);
-				m_positions.push_back(text_coord[f.txt - 1].y);
-			}
-			else 
-			{
-				float theta = atan2(vertices[f.vtx - 1].z, vertices[f.vtx - 1].x);
-				float phi =
-				acos(vertices[f.vtx - 1].y / sqrt(vertices[f.vtx - 1].x * vertices[f.vtx - 1].x 
-					+ vertices[f.vtx - 1].y * vertices[f.vtx - 1].y 
-					+ vertices[f.vtx - 1].z * vertices[f.vtx - 1].z));
-				m_positions.push_back( (theta + M_PI) / (2.0f * M_PI)); // TODO texture calculate
-				m_positions.push_back(phi / M_PI);
-			}
-			if (f.nrm)
-			{
+			m_positions.push_back(text_coord[f.txt].x);
+			m_positions.push_back(text_coord[f.txt].y);
+		}
+		else 
+		{
+			float theta = atan2(vertices[f.vtx].z, vertices[f.vtx].x);
+			float phi =
+			acos(vertices[f.vtx].y / sqrt(vertices[f.vtx].x * vertices[f.vtx].x 
+				+ vertices[f.vtx].y * vertices[f.vtx].y 
+				+ vertices[f.vtx].z * vertices[f.vtx].z));
+			m_positions.push_back( (theta + M_PI) / (2.0f * M_PI)); // TODO texture calculate
+			m_positions.push_back(phi / M_PI);
+		}
+		if (f.nrm)
+		{
 
-				m_positions.push_back(normals[f.nrm - 1].x);
-				m_positions.push_back(normals[f.nrm - 1].y);
-				m_positions.push_back(normals[f.nrm - 1].z);
-			}
-			else 
-			{
-				m_positions.push_back(0);
-				m_positions.push_back(0);
-				m_positions.push_back(0);
-			}
+			m_positions.push_back(normals[f.nrm].x);
+			m_positions.push_back(normals[f.nrm].y);
+			m_positions.push_back(normals[f.nrm].z);
+		}
+		else 
+		{
+			m_positions.push_back(0);
+			m_positions.push_back(0);
+			m_positions.push_back(0);
 		}
 	}
 	if (countVert)

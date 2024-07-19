@@ -10,15 +10,14 @@
 
 struct Material
 {
-	nrg::vec3 color;
-
 	float Ns;
 	nrg::vec3 ka;
 	nrg::vec3 kd;
+	nrg::vec3 ke;
 	nrg::vec3 ks;
 	float ni;
 	float d;
-	unsigned int illum;
+	float illum;
 };
 
 struct Pos
@@ -109,11 +108,24 @@ private:
 	const int kIdxYData = 2;
 	const int kIdxZData = 3;
 	const int kIdxMaterial = 1;
+	const int kIdxMtlFileName = 1;
+
 	const std::string kVertexData = "v";
 	const std::string kTextureCoordData = "vt";
 	const std::string kFaceData = "f";
 	const std::string kNormalData = "vn";
 	const std::string kMtlData = "usemtl";
+	const std::string kMtlFileData = "mtllib";
+	const std::string kMtlNewMtlData = "newmtl";
+	const std::string kMtlNsData = "Ns";
+	const std::string kMtlKaData = "Ka";
+	const std::string kMtlKdData = "Kd";
+	const std::string kMtlKeData = "Ke";
+	const std::string kMtlKsData = "Ks";
+	const std::string kMtlNiData = "Ni";
+	const std::string kMtlDData = "d";
+	const std::string kMtlIlData = "illum";
+
 	const int kTriangleCount = 3;
 	const int kSquareCount = 4;
 
@@ -123,7 +135,12 @@ private:
 	bool addComplexFace(std::vector<std::string>& words, std::vector<face>& faces);
 	bool addSimpleFace(std::vector<std::string>& words, std::vector<face>& faces);
 
-	void parseFile(ModelState& modelState);
+	bool addDataVec3(std::vector<std::string>& words, nrg::vec3& v);
+	bool addDataF(std::vector<std::string>& words, float& f);
+	
+	void parseObjFile(ModelState& modelState);
+	void parseMtlFile();
+
 	void generateIndeces();
 	void generateNormals();
 

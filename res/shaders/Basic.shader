@@ -46,12 +46,12 @@ struct Material
 	float Ns;
 	vec3 ka;
 	vec3 kd;
+	vec3 ke;
 	vec3 ks;
 	float ni;
 	float d;
-	unsigned int illum;
+	float illum;
 };
-
 
 uniform vec4 our_color;
 uniform sampler2D u_Texture;
@@ -95,8 +95,7 @@ void main() {
 		if (u_HasNormal == 1 && u_Light == 1)
 			color = vec4(getNormalColor() * v_ColorCoord);
 		else 
-			// color = vec4(v_ColorCoord);
-			color = vec4(materials[0].color, 1.0f);
+			color = vec4(v_ColorCoord);
 	}
 	else  // texture
 	{

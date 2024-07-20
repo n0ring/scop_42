@@ -30,17 +30,20 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::str
 	m_VAO->addBuffer(*m_VBO, layouts, m_parsedObject->getPositions().size() * 9);
 	m_IBO = std::make_unique<IndexBuffer>(m_parsedObject->getIndices().data(), m_parsedObject->getIndices().size());
 
-	m_shader = std::make_unique<Shader>(shaderFileName);
+	m_shader = std::make_unique<Shader>(shaderFileName, m_parsedObject->getVaribles());
 	m_shader->bind();
 
 	m_texture = std::make_unique<Texture>(textureFileName);
 	m_texture->bind();
 	m_shader->setUniform1i("u_Texture", 0);
-	m_shader->setUniform1i("u_HasNormal", static_cast<int>(m_modelState.hasNormals));
 	m_shader->setUniform1i("u_RenderMode", static_cast<int>(RenderMode::COLOR));
 	m_shader->setUniform1i("u_Light", 0);
+
+
 	if (objectFileName != "elder.obj")
+	{
 		m_shader->setUniformbuffer("Materials", m_UBO->getRendererId());
+	}
 	m_objectState = true;
 }
 
@@ -50,15 +53,15 @@ void ObjectRenderer::onRender()
 
 	Renderer renderer;
 	m_texture->bind();
-	model = nrg::translate(model, m_modelState.centerOffset);
+	// model = nrg::translate(model, m_modelState.centerOffset);
+	model = nrg::translate(model, m_modelState.centerOffset * -1.0f);
 	model = nrg::translate(model, m_modelState.translation); // move model. rotate have to be after move 
 
-	model = nrg::translate(model, m_modelState.centerOffset * -1.0f);
 
 	model = nrg::rotate(model, nrg::radians(m_modelState.rotation_x), nrg::vec3(0.0f, 1.0f, 0.0f));
 	model = nrg::rotate(model, nrg::radians(m_modelState.rotation_y), nrg::vec3(1.0f, 0.0f, 0.0f));
-
 	model = nrg::scale(model, m_modelState.scale);
+
 
 	m_view = nrg::translate(nrg::mat4(1.0f), view_vec);
 	nrg::mat4 mvp = m_proj * m_view * model;
@@ -91,8 +94,6 @@ nrg::vec3 ObjectRenderer::getObjectCenter()
 	model = nrg::translate(model, m_modelState.centerOffset * -1);
 	model = nrg::scale(model, m_modelState.scale);
 	m_view = nrg::translate(nrg::mat4(1.0f), view_vec);
-	// glm::mat4 mvp = m_proj * m_view * model;
-
 	nrg::vec4 worldCenter =  model * localCenter;
 	return nrg::vec3(worldCenter);
 }

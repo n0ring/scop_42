@@ -2,9 +2,9 @@
 #include <sstream>
 #include "Shader.hpp"
 
-Shader::Shader(const std::string &filePath) : m_filePath(filePath), m_renderID(0)
+Shader::Shader(const std::string &filePath, const std::unordered_map<std::string, std::string>& varibles) : m_filePath(filePath), m_renderID(0)
 {
-	ShaderProgramSourse source = parseShader();
+	ShaderProgramSourse source = parseShader(varibles);
 	m_renderID = createShader(source.vertexSource, source.fragmentSource);
 }
 
@@ -27,6 +27,12 @@ void Shader::setUniform1i(const std::string &name, int value)
 {
 	glUniform1i(getUniformLocation(name), value);
 }
+
+void Shader::setUniform1f(const std::string &name, float value)
+{
+	glUniform1f(getUniformLocation(name), value);
+}
+
 
 void Shader::setUniform4f(const std::string &name, float v0, float v1, float v2, float v3)
 {
@@ -63,10 +69,11 @@ int Shader::getUniformLocation(const std::string &name)
 	return location;
 }
 
-ShaderProgramSourse Shader::parseShader()
+ShaderProgramSourse Shader::parseShader(const std::unordered_map<std::string, std::string>& varibles)
 {
 	std::ifstream file(m_filePath);
 	std::string line;
+	size_t var_start;
 
 	enum class ShaderType
 	{
@@ -89,10 +96,21 @@ ShaderProgramSourse Shader::parseShader()
 		}
 		else
 		{
+			var_start = line.find("$");
+			if (var_start != std::string::npos)
+			{
+				size_t var_len = 1;
+				while (var_start < line.size() && line[var_start + var_len++] != '$')
+					;
+				std::string var_name = line.substr(var_start + 1, var_len - 2);
+				if (varibles.count(var_name))
+				{
+					line.replace(var_start, var_len, varibles.at(var_name));
+				}
+			}
 			ss[(int)type] << line << '\n';
 		}
 	}
-
 	return {ss[0].str(), ss[1].str()};
 }
 

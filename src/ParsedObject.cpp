@@ -56,7 +56,6 @@ bool ParsedObject::addVertex(std::vector<std::string> &words, std::vector<Pos> &
 				  << std::endl;
 		return false;
 	}
-
 	vertices.push_back(tmpPos);
 	modelState.centerOffset.x += tmpPos.x;
 	modelState.centerOffset.y += tmpPos.y;
@@ -194,8 +193,13 @@ void ParsedObject::parseObjFile(ModelState &modelState)
 	std::vector<textPos> text_coord;
 	std::vector<face> faces;
 	std::vector<Pos> normals;
+	vertex tmpVtx;
+
 	float countVert = 0;
 	float mtlCount = 0;
+	m_curMtlIdx = 0.0f;
+	m_tmpFace.mtl = m_curMtlIdx;
+	tmpVtx.mtl = m_curMtlIdx;
 
 	int debug_count = 0;
 	if (file.is_open() == false)
@@ -244,8 +248,11 @@ void ParsedObject::parseObjFile(ModelState &modelState)
 					m_materialMap[words[kIdxMaterial]] = mtlCount;
 				}
 				m_curMtlIdx = m_materialMap[words[kIdxMaterial]];
-				m_tmpFace.mtl = m_curMtlIdx;
-				tmpTexPos.mtl = m_curMtlIdx;
+				m_tmpFace.mtl = m_curMtlIdx; // for addSimpleFace
+				tmpTexPos.mtl = m_curMtlIdx; // for addTextureCoord
+				tmpPos.mtl = m_curMtlIdx; // for normals and vertex 
+				for (auto& el : m_tmpFaces)
+					el.mtl = m_curMtlIdx;
 			}
 			else if (words[kIdxTypeData] == kMtlFileData)
 			{
@@ -268,7 +275,6 @@ void ParsedObject::parseObjFile(ModelState &modelState)
 	// std::cout << "Vertices count: " << vertices.size() << std::endl;
 	// std::cout << "Text_coord count: " << text_coord.size() << std::endl;
 	// std::cout << "Normals count: " << normals.size() << std::endl;
-	vertex tmpVtx;
 	for (auto f : faces)
 	{
 		tmpVtx.x = vertices[f.vtx].x;
@@ -291,14 +297,25 @@ void ParsedObject::parseObjFile(ModelState &modelState)
 		tmpVtx.vnx = normals.empty() ? 0 : normals[f.nrm].x;
 		tmpVtx.vny = normals.empty() ? 0 : normals[f.nrm].y;
 		tmpVtx.vnz = normals.empty() ? 0 : normals[f.nrm].z;
-		tmpVtx.mtl = f.mtl ? f.mtl : vertices[f.vtx].mtl; // if face hasn't not default (0) then use from vtx
+		if (f.mtl) // if face hasn't any material look on other data
+			tmpVtx.mtl = f.mtl;
+		else if (vertices[f.vtx].mtl)
+			tmpVtx.mtl = vertices[f.vtx].mtl;
+		else if (text_coord[f.txt].mtl)
+			tmpVtx.mtl = text_coord[f.txt].mtl;
+		else if (!normals.empty() && normals[f.nrm].mtl)
+			tmpVtx.mtl = normals[f.nrm].mtl;
+		else 
+			tmpVtx.mtl = 0;
 		m_positions.push_back(tmpVtx);
 	}
 	if (countVert)
 		modelState.centerOffset = modelState.centerOffset / countVert;
 	if (mtlCount)
 		m_materials.resize(mtlCount + 1); // one [0] for default
+	m_varibles["materials_size"] = std::to_string(static_cast<int>(mtlCount + 1)); // for shader to change in text
 }
+
 void ParsedObject::generateIndeces()
 {
 	std::unordered_map<vertex, int, vertex_hash> mp; // [vtx, idx]
@@ -372,7 +389,7 @@ std::string getPathToFile(std::string& filePath)
 	return filePath.substr(0, i + 1);
 }
 
-void ParsedObject::parseMtlFile()
+bool ParsedObject::parseMtlFile()
 {
 	std::string line;
 	std::vector<std::string> words;
@@ -380,14 +397,14 @@ void ParsedObject::parseMtlFile()
 	if (m_mtlFileName.empty())
 	{
 		std::cout << "no mtl file name in obj\n";
-		return;
+		return false;
 	}
 	m_mtlFileName = getPathToFile(m_objFileName) + m_mtlFileName;
 	std::ifstream file(m_mtlFileName);
 	if (file.is_open() == false)
 	{
 		std::cout << "error with open file: " << m_mtlFileName << std::endl;
-		return;
+		return false;
 	}
 	m_ParseStatus = true;
 
@@ -408,7 +425,7 @@ void ParsedObject::parseMtlFile()
 			}
 			else if ((words[kIdxTypeData] == kMtlNsData) && curMtlIdx)
 			{
-				m_materials[curMtlIdx].Ns = std::stof(words[1]);
+				m_ParseStatus = addDataF(words, m_materials[curMtlIdx].Ns);
 			}
 			else if ((words[kIdxTypeData] == kMtlKaData) && curMtlIdx)
 			{
@@ -439,26 +456,44 @@ void ParsedObject::parseMtlFile()
 				m_ParseStatus = addDataF(words, m_materials[curMtlIdx].illum);
 			}
 			if (m_ParseStatus == false)
-				return;
+				return false;
 		}
 	}
-
-	// for (auto &material : m_materials)
-	// {
-	// 	std::cout << "Ns (Specular Exponent): " << material.Ns << std::endl;
-	// 	std::cout << "Ka (Ambient Color): " << material.ka.x << " " << material.ka.y << " " << material.ka.z << std::endl;
-	// 	std::cout << "Kd (Diffuse Color): " << material.kd.x << " " << material.kd.y << " " << material.kd.z << std::endl;
-	// 	std::cout << "Ks (Specular Color): " << material.ks.x << " " << material.ks.y << " " << material.ks.z << std::endl;
-	// 	std::cout << "Ke (Emissive Color): " << material.ke.x << " " << material.ke.y << " " << material.ke.z << std::endl;
-	// 	std::cout << "Ni (Index of Refraction): " << material.ni << std::endl;
-	// 	std::cout << "d (Transparency): " << material.d << std::endl;
-	// 	std::cout << "illum (Illumination Model): " << material.illum << std::endl;
-	// 	std::cout << std::endl;
-	// }
+	std::cout << "size of " << sizeof(nrg::vec3) << std::endl;
+	for (auto &material : m_materials)
+	{
+		std::cout << "Ns (Specular Exponent): " << material.Ns << std::endl;
+		std::cout << "Ka (Ambient Color): " << material.ka.x << " " << material.ka.y << " " << material.ka.z << std::endl;
+		std::cout << "Kd (Diffuse Color): " << material.kd.x << " " << material.kd.y << " " << material.kd.z << std::endl;
+		std::cout << "Ks (Specular Color): " << material.ks.x << " " << material.ks.y << " " << material.ks.z << std::endl;
+		std::cout << "Ke (Emissive Color): " << material.ke.x << " " << material.ke.y << " " << material.ke.z << std::endl;
+		std::cout << "Ni (Index of Refraction): " << material.ni << std::endl;
+		std::cout << "d (Transparency): " << material.d << std::endl;
+		std::cout << "illum (Illumination Model): " << material.illum << std::endl;
+		std::cout << std::endl;
+	}
+	return true;
 }
+// m_shader->setUniformVec3("material.ambient", {1.0f, 0.5f, 0.31f});
+// m_shader->setUniformVec3("material.diffuse", {1.0f, 0.5f, 0.31f});
+// m_shader->setUniformVec3("material.specular", {0.5f, 0.5f, 0.5f});
+// m_shader->setUniform1f("material.shininess", 32.0f);
 
 ParsedObject::ParsedObject(std::string objFileName, ModelState &modelState) : m_objFileName(objFileName), m_tmpFaces(4)
 {
+	Material defaultMaterial;
+	defaultMaterial.Ns = 100.0f;
+	defaultMaterial.ka = nrg::vec3(1.0f, 0.5f, 0.31f);
+	defaultMaterial.kd = nrg::vec3(1.0f, 0.5f, 0.31f);
+	defaultMaterial.ks = nrg::vec3(0.5f, 0.5f, 0.5f);
+	defaultMaterial.ke = nrg::vec3(0.0f, 0.0f, 0.0f);
+	defaultMaterial.ni = 1.45f;
+	defaultMaterial.d = 1.0f;
+	defaultMaterial.illum= 2;
+
+
+	m_materials.push_back(defaultMaterial);
+
 	parseObjFile(modelState);
 	if (m_ParseStatus)
 	{
@@ -470,7 +505,10 @@ ParsedObject::ParsedObject(std::string objFileName, ModelState &modelState) : m_
 		generateIndeces();
 		std::cout << "Log: Parse done for file: " << m_objFileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;
 	}
-	parseMtlFile();
+	if (parseMtlFile() == false)
+	{
+		m_materials.resize(1); // to only default
+	}
 }
 
 /*

@@ -11,6 +11,7 @@ uniform mat4 u_model;
 out vec2 TexCoord;
 out vec3 FragPos;
 out vec3 Normal;
+flat out float mtlIdx;
 
 vec4 getColorFromPosition(vec4 poss) {
     return vec4(
@@ -22,7 +23,7 @@ vec4 getColorFromPosition(vec4 poss) {
 }
 
 void main(){
-
+	mtlIdx = aMtlIdx;
 	gl_Position = u_MVP * pos; 
 	TexCoord = aTexCoord; // texture
 	v_ColorCoord = getColorFromPosition(normalize(pos));
@@ -40,127 +41,83 @@ in vec2 TexCoord;
 
 in vec3 FragPos;    // Позиция фрагмента, интерполированная из вершинного шейдера
 in vec3 Normal;     // Нормаль фрагмента, интерполированная из вершинного шейдера
+flat in float mtlIdx;
 
-struct Material
-{
-	float Ns;
-	vec3 ka;
-	vec3 kd;
-	vec3 ke;
-	vec3 ks;
-	float ni;
-	float d;
-	float illum;
+struct Material {
+    vec3 ka;      // Ambient Color (12 байт + 4 байта для выравнивания)
+    float padding1; // 4 байта для выравнивания
+    vec3 kd;      // Diffuse Color (12 байт + 4 байта для выравнивания)
+    float padding2; // 4 байта для выравнивания
+    vec3 ke;      // Emissive Color (12 байт + 4 байта для выравнивания)
+    float padding3; // 4 байта для выравнивания
+    vec3 ks;      // Specular Color (12 байт + 4 байта для выравнивания)
+	float padding4;
+    float Ns;     // Specular Exponent (4 байта)
+    float ni;     // Optical Density (4 байта)
+    float d;      // Dissolve (Transparency) (4 байта)
+    float illum;  // Illumination Model (4 байта)
 };
+
 
 uniform vec4 our_color;
 uniform sampler2D u_Texture;
 uniform int u_RenderMode;
-uniform int u_HasNormal;
 uniform int u_Light;
 uniform vec3 u_lightPos;
+
 layout(std140) uniform Materials {
-    Material materials[1];
+    Material materials[$materials_size$];
 };
 
-vec4 getNormalColor() {
-	// vec3 lightPos = vec3(0.0, 10.0, 3.0);
+
+  
+
+
+vec4 getNormalColor(int i)
+{
+	Material material = materials[i];
+	vec3 lightColor = vec3(v_ColorCoord);
 	vec3 lightPos = u_lightPos;
 	vec3 viewPos = vec3(0.0, 0.0, -7.0);
-	vec3 lightColor = vec3(1.0, 1.0, 1.0);
-	vec3 objectColor = vec3(1.0f, 1.0f, 1.0f);
+	vec3 objectColor = vec3(v_ColorCoord);
+	vec3 diffuseColor = lightColor * vec3(0.5f); 
+	vec3 ambientColor = diffuseColor * vec3(0.5f);
 
+    vec3 ambient = ambientColor * material.ka;
 
-    float ambientStrength = 0.1;
-    vec3 ambient = ambientStrength * lightColor;
-    
     vec3 norm = normalize(Normal);
     vec3 lightDir = normalize(lightPos - FragPos);
     float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
-    
-    float specularStrength = 0.5;
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), 32);
-    vec3 specular = specularStrength * spec * lightColor;
-    
-    return vec4((ambient + diffuse + specular) * objectColor, 1.0);
+    vec3 diffuse = (diff * material.kd) ;
 
+    // specular
+    vec3 viewDir = normalize(viewPos - FragPos);
+    vec3 reflectDir = reflect(lightDir, norm);  
+    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.Ns);
+    vec3 specular = spec * material.ks; 
+    vec3 result = ambient + diffuse + specular;
+    return vec4(result, material.d);
 }
 
+
 void main() {
+	int i = int(mtlIdx);
 	if (u_RenderMode == 0) // color
 	{
-		if (u_HasNormal == 1 && u_Light == 1)
-			color = vec4(getNormalColor() * v_ColorCoord);
+		if (u_Light == 1)
+			color = getNormalColor(i);
 		else 
 			color = vec4(v_ColorCoord);
 	}
 	else  // texture
 	{
-		if (u_HasNormal == 1 && u_Light == 1)
-			color = vec4(getNormalColor() * vec4(texture(u_Texture, TexCoord)));
+		if (u_Light == 1)
+		{
+			color = vec4(getNormalColor(i) * vec4(texture(u_Texture, TexCoord)));
+			// color = vec4(getNormalColor(i) * vec4(texture(u_Texture, TexCoord)));
+			color[3] = 1.0f;
+		}
 		else 
 			color = vec4(texture(u_Texture, TexCoord));
 	}
 }
-
-
-
-
-// #shader vertex
-// #version 330 core
-// layout(location = 0) in vec4 pos;
-// layout(location = 1) in vec2 aTexCoord;
-
-// out vec4 v_ColorCoord;
-// uniform mat4 u_MVP;
-// out vec2 TexCoord;
-
-// vec4 blue = vec4(0.0, 0.0, 1.0, 1.0);
-// vec4 yellow = vec4(1.0, 1.0, 0.0, 1.0);
-
-// vec4 getColorFromPosition(vec4 poss) {
-//     // Normalize the y coordinate to be between 0 and 1
-//     float normalizedY = (poss.y + 1.0) * 0.5;
-//     // Interpolate between blue and yellow
-//     return mix(blue, yellow, normalizedY);
-// }
-
-// void main(){
-//     gl_Position = u_MVP * pos; 
-//     TexCoord = aTexCoord; // texture
-//     v_ColorCoord = getColorFromPosition(normalize(pos));
-// }
-
-
-// wbw
-// #shader vertex
-// #version 330 core
-// layout(location = 0) in vec4 pos;
-// layout(location = 1) in vec2 aTexCoord;
-
-// out vec4 v_ColorCoord;
-// uniform mat4 u_MVP;
-// out vec2 TexCoord;
-
-// vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
-// vec4 blue = vec4(0.0, 0.0, 1.0, 1.0);
-
-// vec4 getColorFromPosition(vec4 poss) {
-//     float normalizedY = (poss.y + 1.0) * 0.5;
-
-//     if (normalizedY < 0.5) {
-//         return mix(white, blue, normalizedY / 0.5);
-//     } else {
-//         return mix(blue, white, (normalizedY - 0.5) / 0.5);
-//     }
-// }
-
-// void main() {
-//     gl_Position = u_MVP * pos;
-//     TexCoord = aTexCoord; // texture
-//     v_ColorCoord = getColorFromPosition(normalize(pos));
-// }
-

@@ -7,17 +7,19 @@
 #include <unordered_map>
 
 #include "ModelState.hpp"
-
-struct Material
-{
-	float Ns;
-	nrg::vec3 ka;
-	nrg::vec3 kd;
-	nrg::vec3 ke;
-	nrg::vec3 ks;
-	float ni;
-	float d;
-	float illum;
+struct alignas(16) Material {
+    nrg::vec3 ka;   // 12 байт + 4 байта для выравнивания
+    float padding1; // 4 байта для выравнивания
+    nrg::vec3 kd;   // 12 байт + 4 байта для выравнивания
+    float padding2; // 4 байта для выравнивания
+    nrg::vec3 ke;   // 12 байт + 4 байта для выравнивания
+    float padding3; // 4 байта для выравнивания
+    nrg::vec3 ks;   // 12 байт + 4 байта для выравнивания
+	float padding4;
+    float Ns;       // 4 байта
+    float ni;       // 4 байта
+    float d;        // 4 байта
+    float illum;    // 4 байта
 };
 
 struct Pos
@@ -84,11 +86,12 @@ public:
 	inline const std::vector<unsigned int>& getIndices() const {return m_indices; }
 	inline const std::vector<Material>& getMaterials() const {return m_materials; }
 	inline bool getParseStatus() const {return m_ParseStatus;}
+	inline const std::unordered_map<std::string, std::string>& getVaribles() {return m_varibles;}
 private:
 	std::string m_objFileName;
 	std::string m_mtlFileName;
 	std::vector<vertex> m_positions;
-	std::vector<Material> m_materials = {{{1.0f, 0.0f, 0.0f}}};
+	std::vector<Material> m_materials;
 	std::vector<unsigned int> m_indices;
 	float m_countVert = 0;
 	// float tmp_x, tmp_y, tmp_z;
@@ -100,7 +103,7 @@ private:
 	bool m_ParseStatus = false;
 	std::unordered_map<std::string, float> m_materialMap = {{"default", 0}};
 	float m_curMtlIdx = 0;
-
+	std::unordered_map<std::string, std::string> m_varibles;
 
 	// const for data extract
 	const int kIdxTypeData = 0;
@@ -139,7 +142,7 @@ private:
 	bool addDataF(std::vector<std::string>& words, float& f);
 	
 	void parseObjFile(ModelState& modelState);
-	void parseMtlFile();
+	bool parseMtlFile();
 
 	void generateIndeces();
 	void generateNormals();

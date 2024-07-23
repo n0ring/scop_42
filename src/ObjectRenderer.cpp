@@ -6,7 +6,7 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::str
 
 	// m_proj(glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.01f, 200.0f)),
 	m_proj(nrg::vec4(1.358f, 0.0f, 0.0f, 0.0f),
-					 nrg::vec4(0.0f, 2.41421, 0.0f, 0.0f), 
+					nrg::vec4(0.0f, 2.41421, 0.0f, 0.0f), 
 					 nrg::vec4(0.0f, 0.0f, -1.0001f, -1.0f), 
 					 nrg::vec4(0.0f, 0.0f, -0.020001, 0.0f)),
 	m_view(nrg::translate(nrg::mat4(1.0f), nrg::vec3(0, 0, 0))),
@@ -68,11 +68,13 @@ void ObjectRenderer::onRender()
 
 	nrg::mat4 mvp = m_proj * m_view * model;
 	m_shader->bind();
+	// TODO is not changes not to do
 	m_shader->setUniformMat4f("u_MVP", mvp);
 	m_shader->setUniformMat4f("u_model", model);
 	m_shader->setUniform1i("u_RenderMode", static_cast<int>(m_modelState.renderMode));
 	m_shader->setUniformVec3("u_lightPos", m_modelState.lightPos);
-	m_shader->setUniform1i("u_Light", static_cast<int>(m_modelState.lightOn));	
+	m_shader->setUniform1i("u_Light", static_cast<int>(m_modelState.lightOn));
+	m_shader->setUniform1i("u_isActive", static_cast<int>(m_isobjectActive));
 	if (!m_modelState.fill_model)
 		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL); // GL_LINE
 	else 

@@ -47,6 +47,7 @@ uniform sampler2D u_Texture;
 uniform int u_RenderMode;
 uniform int u_HasNormal;
 uniform int u_Light;
+uniform int u_isActive;
 uniform vec3 u_lightPos;
 
 
@@ -69,62 +70,6 @@ void main() {
 		else 
 			color = vec4(texture(u_Texture, TexCoord));
 	}
+	if (u_isActive == 1)
+		color *= 1.4f;
 }
-
-
-
-// #shader vertex
-// #version 330 core
-// layout(location = 0) in vec4 pos;
-// layout(location = 1) in vec2 aTexCoord;
-
-// out vec4 v_ColorCoord;
-// uniform mat4 u_MVP;
-// out vec2 TexCoord;
-
-// vec4 blue = vec4(0.0, 0.0, 1.0, 1.0);
-// vec4 yellow = vec4(1.0, 1.0, 0.0, 1.0);
-
-// vec4 getColorFromPosition(vec4 poss) {
-//     // Normalize the y coordinate to be between 0 and 1
-//     float normalizedY = (poss.y + 1.0) * 0.5;
-//     // Interpolate between blue and yellow
-//     return mix(blue, yellow, normalizedY);
-// }
-
-// void main(){
-//     gl_Position = u_MVP * pos; 
-//     TexCoord = aTexCoord; // texture
-//     v_ColorCoord = getColorFromPosition(normalize(pos));
-// }
-
-
-// wbw
-// #shader vertex
-// #version 330 core
-// layout(location = 0) in vec4 pos;
-// layout(location = 1) in vec2 aTexCoord;
-
-// out vec4 v_ColorCoord;
-// uniform mat4 u_MVP;
-// out vec2 TexCoord;
-
-// vec4 white = vec4(1.0, 1.0, 1.0, 1.0);
-// vec4 blue = vec4(0.0, 0.0, 1.0, 1.0);
-
-// vec4 getColorFromPosition(vec4 poss) {
-//     float normalizedY = (poss.y + 1.0) * 0.5;
-
-//     if (normalizedY < 0.5) {
-//         return mix(white, blue, normalizedY / 0.5);
-//     } else {
-//         return mix(blue, white, (normalizedY - 0.5) / 0.5);
-//     }
-// }
-
-// void main() {
-//     gl_Position = u_MVP * pos;
-//     TexCoord = aTexCoord; // texture
-//     v_ColorCoord = getColorFromPosition(normalize(pos));
-// }
-

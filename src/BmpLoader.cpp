@@ -50,7 +50,6 @@ bool BmpLoader::loadBMPTexture(const char *filename, std::vector<unsigned char>&
 	data.resize(imageSize);
 	file.read(reinterpret_cast<char *>(data.data()), imageSize);
 	file.close();
-	std::cout << header.bitCount << std::endl;
 
 	return true;
 }

@@ -23,10 +23,26 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	keyboardManager.setKeyState(key, action);
 }
 
-int main(void)
+int main(int argc, char** argv)
 {
 	GLFWwindow *window;
+	std::vector<ObjectRenderer> objects;
 
+	if (argc == 1)
+	{
+		std::cout << "Usage of scop: \n";
+		std::cout << "For render model add path to .obj file as second argument. Example: ./scop pathTo.obj\n";
+		std::cout << "Controls: \n";
+		std::cout << "WASD for move object in xy axis\n";
+		std::cout << "Q E  for move object in z axis\n";
+		std::cout << "UP DOWN LEFT RIGHT  for turn object\n";
+		std::cout << "T for toggle between texture color modes\n";
+		std::cout << "F for lines only. U for fill mode\n";
+		std::cout << "- + for scale object (use left shit for +)\n";
+		std::cout << "For turn on light type lumos. Guess for turn off?\n";
+		return 0;
+
+	}
 	/* Initialize the library */
 	if (!glfwInit())
 		return -1;
@@ -52,32 +68,25 @@ int main(void)
 		std::cout << "Failed to initialize GLAD" << std::endl;
 		return -1;
 	}
-	// std::cout << glGetString(GL_VERSION) << std::endl;
-
+	std::cout << glGetString(GL_VERSION) << std::endl;
 
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA); 
 	glEnable(GL_BLEND);
 
-	ObjectRenderer lightRenderer("elder.obj", "res/shaders/lightObject.shader", "res/texture/elder_tex.jpg");
-	// ObjectRenderer objectRenderer("new_cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 
-	// ObjectRenderer objectRenderer("objects/teapot.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	ObjectRenderer objectRenderer("ship.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp");
-	// ObjectRenderer objectRenderer("objects/teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("res1/teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("42.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("test_cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("res1/plane.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("res1/castle.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("res1/spider.obj"); // model states 
-	// ObjectRenderer objectRenderer("res1/building.obj"); // model states 
-	// ObjectRenderer objectRenderer("res1/ohouse.obj", "res/shaders/Basic.shader"); // model states 
-	// ObjectRenderer objectRenderer("elder1.obj", "res/shaders/Basic.shader");
-
-	if (objectRenderer.isObjectValid() == false)
+	objects.push_back(ObjectRenderer("res/models/elder.obj", "res/shaders/lightObject.shader", "res/texture/elder_tex.jpg"));
+	for (int i = 1; i < argc; i++)
 	{
-		return -1;
+		objects.push_back(ObjectRenderer(argv[i]));
+	}
+
+	for (auto& obj : objects)
+	{
+		if (obj.isObjectValid() == false)
+		{
+			return -1;
+		}
+		keyboardManager.addObserver(&obj);
 	}
 	
 	glfwSetKeyCallback(window, key_callback);
@@ -85,27 +94,31 @@ int main(void)
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_DEPTH_TEST);
 	
-	keyboardManager.addObserver(&objectRenderer);
-	keyboardManager.addObserver(&lightRenderer);
-	lightRenderer.getModelState().setElder();
+	objects[0].getModelState().setElder();
+	objects[1].setObjectAsActive();
 	glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+	// glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
 	while (!glfwWindowShouldClose(window))
 	{
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 		keyboardManager.update();
 		keyboardManager.spellCheck();
-
-		objectRenderer.onRender();
-		if (lightRenderer.getModelState().lightOn)
-			lightRenderer.onRender();
+		for (int i = 1; i < objects.size(); i++)
+		{
+			objects[i].onRender();
+			objects[i].getModelState().lightPos = objects[0].getObjectCenter();
+		}
+		if (objects[0].getModelState().lightOn)
+			objects[0].onRender();
 		glfwSwapBuffers(window);
 
 		/* Poll for and process events */
 		glfwPollEvents();
-		objectRenderer.getModelState().lightPos = lightRenderer.getObjectCenter();
 	}
 	glfwDestroyWindow(window);
 	glfwTerminate();
 	return 0;
 }
+
+ // add is active

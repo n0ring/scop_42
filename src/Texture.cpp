@@ -6,13 +6,16 @@ Texture::Texture(const std::string &filePath)
 	: m_renderID(0), m_filePath(filePath), m_localBuffer(nullptr),
 	  m_width(0), m_height(0), m_BPP(0)
 {
-	bool useStbi = false; // only for fun
+	// according to subj i can't use any libs for download texture. soo for main part i don't use it.
+	// my texture loads with my own loader. 
+	// but. for little fun i add some other stuff which is not in subj. so i guss i can use stbi little bit
+	bool useStbi = true; // only for fun
 	glGenTextures(1, &m_renderID);
 	glBindTexture(GL_TEXTURE_2D, m_renderID);
 	std::vector<unsigned char> data;
 
-	if (m_filePath.find(".jpg") != std::string::npos)
-		useStbi = true;
+	if (m_filePath.find(".bmp") != std::string::npos)
+		useStbi = false;
 	if (useStbi)
 	{
 		stbi_set_flip_vertically_on_load(1);

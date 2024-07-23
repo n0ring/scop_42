@@ -63,6 +63,7 @@ uniform vec4 our_color;
 uniform sampler2D u_Texture;
 uniform int u_RenderMode;
 uniform int u_Light;
+uniform int u_isActive; 
 uniform vec3 u_lightPos;
 
 layout(std140) uniform Materials {
@@ -79,13 +80,13 @@ vec4 getLight(int i, int colorTextMode)
 	vec3 lightColor;
 	if (colorTextMode == 0) // color
 		lightColor = vec3(v_ColorCoord);
-	else // texture
+	else 					// texture
 		lightColor = vec3(1.0f);
 	vec3 lightPos = u_lightPos;
 	vec3 viewPos = vec3(0.0, 0.0, -7.0);
 	vec3 objectColor = vec3(v_ColorCoord);
 	vec3 diffuseColor = lightColor * vec3(0.5f); 
-	vec3 ambientColor = diffuseColor * vec3(0.5f);
+	vec3 ambientColor = diffuseColor * vec3(0.9f); // add active
 
     vec3 ambient = ambientColor * material.ka;
 
@@ -106,14 +107,14 @@ vec4 getLight(int i, int colorTextMode)
 
 void main() {
 	int materialIdx = int(mtlIdx);
-	if (u_RenderMode == 0) // color
+	if (u_RenderMode == 0)	// color
 	{
 		if (u_Light == 1)
 			color = getLight(materialIdx, u_RenderMode);
 		else 
 			color = vec4(v_ColorCoord);
 	}
-	else  // texture
+	else  					// texture
 	{
 		if (u_Light == 1)
 		{
@@ -122,4 +123,6 @@ void main() {
 		else 
 			color = vec4(texture(u_Texture, TexCoord));
 	}
+	if (u_isActive == 1)
+		color *= 1.2f;
 }

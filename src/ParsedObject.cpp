@@ -18,6 +18,8 @@ void ParsedObject::split(std::string &line, std::vector<std::string> &words, cha
 {
 	size_t start = 0, end = 0;
 	words.clear();
+	if (line.empty())
+		return;
 	while (end < line.size())
 	{
 		end = line.find(div, start);
@@ -30,6 +32,7 @@ void ParsedObject::split(std::string &line, std::vector<std::string> &words, cha
 			start++;
 	}
 }
+
 
 bool isLineValid(std::vector<std::string> &words)
 {
@@ -245,6 +248,8 @@ void ParsedObject::parseObjFile(ModelState &modelState)
 				else
 				{
 					mtlCount++;
+	std::cout << "mtlCount: " << mtlCount << "\n";
+
 					m_materialMap[words[kIdxMaterial]] = mtlCount;
 				}
 				m_curMtlIdx = m_materialMap[words[kIdxMaterial]];
@@ -311,8 +316,8 @@ void ParsedObject::parseObjFile(ModelState &modelState)
 	}
 	if (countVert)
 		modelState.centerOffset = modelState.centerOffset / countVert;
-	if (mtlCount)
-		m_materials.resize(mtlCount + 1); // one [0] for default
+	m_materials.resize(mtlCount + 1); // at least one for default
+
 	m_varibles["materials_size"] = std::to_string(static_cast<int>(mtlCount + 1)); // for shader to change in text
 }
 
@@ -371,7 +376,17 @@ bool ParsedObject::addDataF(std::vector<std::string> &words, float& f)
 {
 	if (words.size() == 2)
 	{
-		f = std::stof(words[1]);
+		try
+		{
+			f = std::stof(words[1]);
+			/* code */
+		}
+		catch(const std::exception& e)
+		{
+			std::cout << words[0] << " " << words[1] << std::endl;
+			std::cerr << e.what() << '\n';
+		}
+		
 	}
 	else
 	{
@@ -386,6 +401,8 @@ std::string getPathToFile(std::string& filePath)
 	int i = filePath.size() - 1;
 	while (i >= 0 && filePath[i] != '/')
 		i--;
+
+	std::cout << "mtl file path: " << filePath.substr(0, i + 1) << std::endl;
 	return filePath.substr(0, i + 1);
 }
 
@@ -394,9 +411,18 @@ bool ParsedObject::parseMtlFile()
 	std::string line;
 	std::vector<std::string> words;
 	int curMtlIdx = 0; // default
+	m_materials[0].Ns = 100.0f;
+	m_materials[0].ka = nrg::vec3(0.5f, 0.5f, 0.31f);
+	m_materials[0].kd = nrg::vec3(1.0f, 0.5f, 0.31f);
+	m_materials[0].ks = nrg::vec3(0.5f, 0.5f, 0.5f);
+	m_materials[0].ke = nrg::vec3(0.0f, 0.0f, 0.0f);
+	m_materials[0].ni = 1.45f;
+	m_materials[0].d = 1.0f;
+	m_materials[0].illum = 2;
+
 	if (m_mtlFileName.empty())
 	{
-		std::cout << "no mtl file name in obj\n";
+		std::cout << "no mtl file name in " << m_objFileName << std::endl;
 		return false;
 	}
 	m_mtlFileName = getPathToFile(m_objFileName) + m_mtlFileName;
@@ -407,7 +433,6 @@ bool ParsedObject::parseMtlFile()
 		return false;
 	}
 	m_ParseStatus = true;
-
 	while (getline(file, line))
 	{
 		split(line, words, ' ');
@@ -480,19 +505,6 @@ bool ParsedObject::parseMtlFile()
 
 ParsedObject::ParsedObject(std::string objFileName, ModelState &modelState) : m_objFileName(objFileName), m_tmpFaces(4)
 {
-	Material defaultMaterial;
-	defaultMaterial.Ns = 100.0f;
-	defaultMaterial.ka = nrg::vec3(1.0f, 0.5f, 0.31f);
-	defaultMaterial.kd = nrg::vec3(1.0f, 0.5f, 0.31f);
-	defaultMaterial.ks = nrg::vec3(0.5f, 0.5f, 0.5f);
-	defaultMaterial.ke = nrg::vec3(0.0f, 0.0f, 0.0f);
-	defaultMaterial.ni = 1.45f;
-	defaultMaterial.d = 1.0f;
-	defaultMaterial.illum= 2;
-
-
-	m_materials.push_back(defaultMaterial);
-
 	parseObjFile(modelState);
 	if (m_ParseStatus)
 	{
@@ -502,11 +514,8 @@ ParsedObject::ParsedObject(std::string objFileName, ModelState &modelState) : m_
 			modelState.hasNormals = true;
 		}
 		generateIndeces();
+		parseMtlFile();	
 		std::cout << "Log: Parse done for file: " << m_objFileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;
-	}
-	if (parseMtlFile() == false)
-	{
-		m_materials.resize(1); // to only default
 	}
 }
 

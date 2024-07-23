@@ -47,7 +47,7 @@ private:
 	};
 
 	std::vector<ObjectRenderer*> m_observers;
-	int m_activeObject = 0;
+	int m_activeObject = 1; // 0 object is elder
 	std::string kLumos = "lumos";
 	std::string kNox = "nox";
 	int m_lumosIdx = 0;

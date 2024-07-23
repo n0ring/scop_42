@@ -4,6 +4,33 @@ void KeyboardManager::update()
 {
 	for (auto [key, state] : keysState)
 	{
+		if (state == GLFW_PRESS)
+		{
+			switch (key)
+			{
+				case GLFW_KEY_T:
+					m_observers[m_activeObject]->getModelState().toggleTexColor();
+					keysState[GLFW_KEY_T] = 0;
+					break;
+				case GLFW_KEY_1:
+					m_observers[m_activeObject]->setObjectAsNotActive();
+					m_activeObject--;
+					if (m_activeObject < 0)
+						m_activeObject = m_observers.size() - 1;
+					m_observers[m_activeObject]->setObjectAsActive();
+					keysState[GLFW_KEY_1] = 0;
+					break;
+				case GLFW_KEY_2:
+					m_observers[m_activeObject]->setObjectAsNotActive();
+					m_activeObject++;
+					if (m_activeObject >= m_observers.size())
+						m_activeObject = 0;
+					keysState[GLFW_KEY_2] = 0;
+					m_observers[m_activeObject]->setObjectAsActive();
+					break;
+			}
+
+		}
 		if (state == GLFW_PRESS || state == GLFW_REPEAT)
 		{
 			switch (key)
@@ -50,17 +77,6 @@ void KeyboardManager::update()
 				break;
 			case GLFW_KEY_Q:
 				m_observers[m_activeObject]->getModelState().moveModelClose();
-				break;
-			case GLFW_KEY_T:
-				if (state == GLFW_PRESS)
-					m_observers[m_activeObject]->getModelState().toggleTexColor();
-				keysState[GLFW_KEY_T] = 0;
-				break;
-			case GLFW_KEY_1:
-				m_activeObject = 0;
-				break;
-			case GLFW_KEY_2:
-				m_activeObject = 1;
 				break;
 			default:
 				break;

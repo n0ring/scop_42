@@ -52,10 +52,9 @@ void KeyboardManager::update()
 				m_observers[m_activeObject]->getModelState().moveModelClose();
 				break;
 			case GLFW_KEY_T:
-				m_observers[m_activeObject]->getModelState().changeToTexture();
-				break;
-			case GLFW_KEY_C:
-				m_observers[m_activeObject]->getModelState().changeToColor();
+				if (state == GLFW_PRESS)
+					m_observers[m_activeObject]->getModelState().toggleTexColor();
+				keysState[GLFW_KEY_T] = 0;
 				break;
 			case GLFW_KEY_1:
 				m_activeObject = 0;

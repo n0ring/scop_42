@@ -132,14 +132,9 @@ struct ModelState
 			translation.z += MOVE_MODEL_STEP;
 	}
 
-	void changeToColor()
+	void toggleTexColor()
 	{
-		renderMode = RenderMode::COLOR;
-	}
-
-	void changeToTexture()
-	{
-		renderMode = RenderMode::TEXTURE;
+		renderMode = renderMode == RenderMode::COLOR ? RenderMode::TEXTURE : RenderMode::COLOR;
 	}
 
 	void lumos()
@@ -154,7 +149,7 @@ struct ModelState
 
 	void setElder()
 	{
-		translation = nrg::vec3(3.4f, 1.7f, 0.5f);
+		translation = nrg::vec3(4.2f, -0.5f, 2.1f);
 		scale = nrg::vec3(0.51f, 0.51f, 0.51f);
 		rotation_x = 79.001f;
 		rotation_y = 65.001f;

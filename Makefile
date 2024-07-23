@@ -20,7 +20,7 @@ OBJ		=	$(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/%.o, $(filter %.cpp, $(SRC))) \
 			$(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(filter %.c, $(SRC)))
 CC		=	clang++
 LIBFLAGS=	-L./lib -lglfw3 -framework OpenGL -framework Cocoa -framework IOKit -framework CoreVideo
-CFLAGS	=	-fsanitize=address --std=c++17 -Wno-deprecated -MD -MP -I include -I include/imgui
+CFLAGS	=	--std=c++17 -Wno-deprecated -MD -MP -I include -I include/imgui
 # CFLAGS	=	--std=c++17 -Wno-deprecated -Wall -Wextra -Werror -MD -MP -I include -I include/imgui
 DEPENDS	=	$(OBJ:.o=.d)
 NAME	=	opengl_test

@@ -47,11 +47,14 @@ uniform sampler2D u_Texture;
 uniform int u_RenderMode;
 uniform int u_HasNormal;
 uniform int u_Light;
+uniform vec3 u_lightPos;
+
 
 
 void main() {
-	if (u_Light == 1) // just to remove error
+	if (u_Light == 1 && u_lightPos.x == 1) // just to remove Warning
 	{}
+
 	if (u_RenderMode == 0) // color
 	{
 		if (u_HasNormal == 1)

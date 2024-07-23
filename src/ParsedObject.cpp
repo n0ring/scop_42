@@ -459,19 +459,18 @@ bool ParsedObject::parseMtlFile()
 				return false;
 		}
 	}
-	std::cout << "size of " << sizeof(nrg::vec3) << std::endl;
-	for (auto &material : m_materials)
-	{
-		std::cout << "Ns (Specular Exponent): " << material.Ns << std::endl;
-		std::cout << "Ka (Ambient Color): " << material.ka.x << " " << material.ka.y << " " << material.ka.z << std::endl;
-		std::cout << "Kd (Diffuse Color): " << material.kd.x << " " << material.kd.y << " " << material.kd.z << std::endl;
-		std::cout << "Ks (Specular Color): " << material.ks.x << " " << material.ks.y << " " << material.ks.z << std::endl;
-		std::cout << "Ke (Emissive Color): " << material.ke.x << " " << material.ke.y << " " << material.ke.z << std::endl;
-		std::cout << "Ni (Index of Refraction): " << material.ni << std::endl;
-		std::cout << "d (Transparency): " << material.d << std::endl;
-		std::cout << "illum (Illumination Model): " << material.illum << std::endl;
-		std::cout << std::endl;
-	}
+	// for (auto &material : m_materials)
+	// {
+	// 	std::cout << "Ns (Specular Exponent): " << material.Ns << std::endl;
+	// 	std::cout << "Ka (Ambient Color): " << material.ka.x << " " << material.ka.y << " " << material.ka.z << std::endl;
+	// 	std::cout << "Kd (Diffuse Color): " << material.kd.x << " " << material.kd.y << " " << material.kd.z << std::endl;
+	// 	std::cout << "Ks (Specular Color): " << material.ks.x << " " << material.ks.y << " " << material.ks.z << std::endl;
+	// 	std::cout << "Ke (Emissive Color): " << material.ke.x << " " << material.ke.y << " " << material.ke.z << std::endl;
+	// 	std::cout << "Ni (Index of Refraction): " << material.ni << std::endl;
+	// 	std::cout << "d (Transparency): " << material.d << std::endl;
+	// 	std::cout << "illum (Illumination Model): " << material.illum << std::endl;
+	// 	std::cout << std::endl;
+	// }
 	return true;
 }
 // m_shader->setUniformVec3("material.ambient", {1.0f, 0.5f, 0.31f});

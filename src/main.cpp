@@ -23,7 +23,6 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 	keyboardManager.setKeyState(key, action);
 }
 
-
 int main(void)
 {
 	GLFWwindow *window;
@@ -62,14 +61,11 @@ int main(void)
 	ObjectRenderer lightRenderer("elder.obj", "res/shaders/lightObject.shader", "res/texture/elder_tex.jpg");
 	// ObjectRenderer objectRenderer("new_cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 
-	// ObjectRenderer objectRenderer("alienanimal.obj",  "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("objects/teapot.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	ObjectRenderer objectRenderer("ship.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp");
 	// ObjectRenderer objectRenderer("objects/teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("res1/teapot2.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
-	// ObjectRenderer objectRenderer("teapot.obj"); // model states 
-	// ObjectRenderer objectRenderer("sword.obj"); // model states 
-	// ObjectRenderer objectRenderer("42.obj", "res/shaders/Basic.shader", "res/texture/elder_tex.jpg"); // model states 
+	// ObjectRenderer objectRenderer("42.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("test_cube.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
 	// ObjectRenderer objectRenderer("res1/plane.obj", "res/shaders/Basic.shader", "res/texture/tex1.bmp"); // model states 
@@ -83,8 +79,6 @@ int main(void)
 	{
 		return -1;
 	}
-
-
 	
 	glfwSetKeyCallback(window, key_callback);
 		glEnable(GL_BLEND);

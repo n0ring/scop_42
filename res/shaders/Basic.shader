@@ -73,10 +73,14 @@ layout(std140) uniform Materials {
   
 
 
-vec4 getNormalColor(int i)
+vec4 getLight(int i, int colorTextMode)
 {
 	Material material = materials[i];
-	vec3 lightColor = vec3(v_ColorCoord);
+	vec3 lightColor;
+	if (colorTextMode == 0) // color
+		lightColor = vec3(v_ColorCoord);
+	else // texture
+		lightColor = vec3(1.0f);
 	vec3 lightPos = u_lightPos;
 	vec3 viewPos = vec3(0.0, 0.0, -7.0);
 	vec3 objectColor = vec3(v_ColorCoord);
@@ -101,11 +105,11 @@ vec4 getNormalColor(int i)
 
 
 void main() {
-	int i = int(mtlIdx);
+	int materialIdx = int(mtlIdx);
 	if (u_RenderMode == 0) // color
 	{
 		if (u_Light == 1)
-			color = getNormalColor(i);
+			color = getLight(materialIdx, u_RenderMode);
 		else 
 			color = vec4(v_ColorCoord);
 	}
@@ -113,9 +117,7 @@ void main() {
 	{
 		if (u_Light == 1)
 		{
-			color = vec4(getNormalColor(i) * vec4(texture(u_Texture, TexCoord)));
-			// color = vec4(getNormalColor(i) * vec4(texture(u_Texture, TexCoord)));
-			color[3] = 1.0f;
+			color = vec4(getLight(materialIdx, u_RenderMode) * vec4(texture(u_Texture, TexCoord)));
 		}
 		else 
 			color = vec4(texture(u_Texture, TexCoord));

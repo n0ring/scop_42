@@ -26,14 +26,14 @@ struct ModelState
 	bool fill_model = false;
 	nrg::vec3 translation;
 	RenderMode renderMode = RenderMode::COLOR;
-	nrg::vec3 centerOffset;
+	nrg::vec3 centerOffsetMin = {100000.0f};
+	nrg::vec3 centerOffsetMax = {-100000.0f};
 	bool hasNormals = false;
 	nrg::vec3 lightPos;
 	bool lightOn = false;
 
 	ModelState() : scale(1.0f, 1.0f, 1.0f), 
 		translation(nrg::vec3(0.5f)), 
-		centerOffset(nrg::vec3(0.0f)),
 		lightPos(0.0f, 10.0f, 3.0f)
 		{}
 

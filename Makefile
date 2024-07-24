@@ -50,6 +50,10 @@ fclean	: clean
 x : all
 	./$(NAME) res/models/ship.obj
 
+42 : all
+	./$(NAME) res/models/42.obj
+
+
 
 leaks			:	all
 					leaks --atExit -- ./$(NAME)

@@ -81,6 +81,7 @@ public:
 	ParsedObject(std::string fileName, ModelState& modelState);
 	~ParsedObject() {}
 
+	void clearData();
 	
 	inline const std::vector<vertex>& getPositions() const {return m_positions; }
 	inline const std::vector<unsigned int>& getIndices() const {return m_indices; }
@@ -112,6 +113,11 @@ private:
 	const int kIdxZData = 3;
 	const int kIdxMaterial = 1;
 	const int kIdxMtlFileName = 1;
+
+	const int kValidNumVertex = 4;
+	const int kValidNumTexCoord = 3;
+	const int kValidNumFaceTriangle = 4;
+	const int kValidNumFaceSquare = 5;
 
 	const std::string kVertexData = "v";
 	const std::string kTextureCoordData = "vt";
@@ -147,5 +153,7 @@ private:
 	void generateIndeces();
 	void generateNormals();
 
+
 	void split(std::string& line, std::vector<std::string>& words, char div);
+
 };

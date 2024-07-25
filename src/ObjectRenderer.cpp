@@ -1,10 +1,9 @@
 
 #include "ObjectRenderer.hpp"
 
-ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::string& shaderFileName, const std::string& textureFileName) 
-	: m_translation(0, 0, 0),
-
-	// m_proj(glm::perspective(glm::radians(45.0f), 960.0f / 540.0f, 0.01f, 200.0f)),
+ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const unsigned int objId, const std::string& shaderFileName, const std::string& textureFileName) 
+	: m_objId(objId), 
+	m_translation(0, 0, 0),
 	m_proj(nrg::vec4(1.358f, 0.0f, 0.0f, 0.0f),
 					nrg::vec4(0.0f, 2.41421, 0.0f, 0.0f), 
 					 nrg::vec4(0.0f, 0.0f, -1.0001f, -1.0f), 
@@ -18,7 +17,7 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::str
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	glEnable(GL_BLEND);
 	m_VAO = std::make_unique<VertexArray>();
-	if (objectFileName != "elder.obj")
+	if (objectFileName != "res/models/elder.obj")
 		m_UBO = std::make_unique<UniformBuffer>(m_parsedObject->getMaterials().data(), m_parsedObject->getMaterials().size());
 
 	m_VBO = std::make_unique<VertexBuffer>(m_parsedObject->getPositions().data(), m_parsedObject->getPositions().size() * sizeof(vertex));
@@ -40,9 +39,10 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const std::str
 	m_shader->setUniform1i("u_Light", 0);
 
 
-	if (objectFileName != "elder.obj")
+	if (objectFileName != "res/models/elder.obj")
 	{
-		m_shader->setUniformbuffer("Materials", m_UBO->getRendererId());
+		
+		m_shader->setUniformbuffer("Materials", m_UBO->getRendererId(), m_objId);
 	}
 	m_objectState = true;
 	// m_parsedObject->clearData();

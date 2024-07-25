@@ -49,9 +49,9 @@ void Shader::setUniformVec3(const std::string &name, nrg::vec3 data)
 	glUniform3f(getUniformLocation(name), data.x, data.y, data.z);
 }
 
-void Shader::setUniformbuffer(const std::string &name, unsigned int ubo_id)
+void Shader::setUniformbuffer(const std::string &name, unsigned int ubo_id, unsigned int objId)
 {
-	GLuint bindingPoint = 0;
+	GLuint bindingPoint = objId;
 	glBindBufferBase(GL_UNIFORM_BUFFER, bindingPoint, ubo_id);
 
 	GLuint blockIndex = glGetUniformBlockIndex(m_renderID, name.c_str());

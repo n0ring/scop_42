@@ -27,6 +27,7 @@ int main(int argc, char** argv)
 {
 	GLFWwindow *window;
 	std::vector<ObjectRenderer> objects;
+	unsigned int objId = 0;
 
 	if (argc == 1)
 	{
@@ -74,10 +75,10 @@ int main(int argc, char** argv)
 	glEnable(GL_BLEND);
 
 
-	objects.push_back(ObjectRenderer("res/models/elder.obj", "res/shaders/lightObject.shader", "res/texture/elder_tex.jpg"));
+	objects.push_back(ObjectRenderer("res/models/elder.obj", objId++, "res/shaders/lightObject.shader", "res/texture/elder_tex.jpg"));
 	for (int i = 1; i < argc; i++)
 	{
-		objects.push_back(ObjectRenderer(argv[i]));
+		objects.push_back(ObjectRenderer(argv[i], objId++));
 	}
 
 	for (auto& obj : objects)

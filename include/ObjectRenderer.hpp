@@ -17,6 +17,7 @@ class ObjectRenderer
 {
 public:
 	ObjectRenderer(const std::string &objectFileName,
+				   const unsigned int objId,
 				   const std::string &shaderFileName = "res/shaders/Basic.shader",
 				   const std::string &textureFileName = "res/texture/tex1.bmp");
 	~ObjectRenderer()
@@ -37,7 +38,8 @@ public:
 		  m_modelState(std::move(other.m_modelState)),
 		  m_parsedObject(std::move(other.m_parsedObject)),
 		  m_objectState(other.m_objectState),
-		  m_isobjectActive(other.m_isobjectActive){}
+		  m_isobjectActive(other.m_isobjectActive),
+		  m_objId(other.m_objId) {}
 
 	ObjectRenderer &operator=(ObjectRenderer &&other) noexcept
 	{
@@ -57,6 +59,7 @@ public:
 			m_parsedObject = std::move(other.m_parsedObject);
 			m_objectState = other.m_objectState;
 			m_isobjectActive = other.m_isobjectActive;
+			m_objId = other.m_objId;
 		}
 		return *this;
 	}
@@ -86,4 +89,5 @@ private:
 	std::unique_ptr<ParsedObject> m_parsedObject;
 	bool m_objectState = false;
 	bool m_isobjectActive = false;
+	unsigned int m_objId;
 };

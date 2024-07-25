@@ -124,5 +124,5 @@ void main() {
 			color = vec4(texture(u_Texture, TexCoord));
 	}
 	if (u_isActive == 1)
-		color *= 1.2f;
+		color *= 1.09f;
 }

@@ -543,12 +543,12 @@ ParsedObject::ParsedObject(std::string objFileName, ModelState &modelState) : m_
 			for (auto& pos : m_positions)
 				pos.mtl = 0;
 		}
-		m_materials[0].Ns = 100.0f;
-		m_materials[0].ka = nrg::vec3(0.5f, 0.5f, 0.31f);
-		m_materials[0].kd = nrg::vec3(1.0f, 0.5f, 0.31f);
+		m_materials[0].Ns = 96.0f;
+		m_materials[0].ka = nrg::vec3(0.0f, 0.0f, 0.0f);
+		m_materials[0].kd = nrg::vec3(0.64f, 0.64f, 0.64f);
 		m_materials[0].ks = nrg::vec3(0.5f, 0.5f, 0.5f);
 		m_materials[0].ke = nrg::vec3(0.0f, 0.0f, 0.0f);
-		m_materials[0].ni = 1.45f;
+		m_materials[0].ni = 1.0f;
 		m_materials[0].d = 1.0f;
 		m_materials[0].illum = 2;
 		std::cout << "Log: Parse done for file: " << m_objFileName << ". Verticies: " << m_positions.size() << " indeces: " << m_indices.size() << std::endl;

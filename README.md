@@ -1,5 +1,15 @@
 Basic GPU rendering with OpenGL
 
+Usage:
+For render model add path to .obj file as second argument. Example: ./scop pathTo.obj
+Controls:
+WASD for move object in xy axis
+Q E for move object in z axis
+UP DOWN LEFT RIGHT  for turn object
+T for toggle between texture color modes
+F for lines only. U for fill mode
+- + for scale object (use left shit for +)
+For turn on light type lumos. Guess for turn off?
 
 
 

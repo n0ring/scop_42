@@ -1,6 +1,31 @@
-Basic GPU rendering with OpenGL
+### GPU Rendering with OpenGL
 
+Project for 42 Ecole.
 
+This project loads models from .obj files with mtl settings, sends data to the GPU, and renders using shaders. You can rotate models along the x and y axes, move them along the x, y, and z axes, and change their size.
+
+You can also rotate textures, select the active object (which will light up), and toggle simple lights on and off.
+
+According to the task, I couldn't use any external libraries to parse the model, work with matrices, or load textures.
+
+So, I created my own parser, a small analog of glm functions, and some simple code to load textures as bmp files.
+
+Additionally, I used the stb_image library to load jpg textures just for fun stuff, as it is not part of the main subject.
+
+**Usage:**
+
+To render a model, add the path to the .obj file as the second argument. Example: `./scop pathTo.obj`
+
+**Controls:**
+
+- `WASD` to move the object along the xy axes
+- `Q` and `E` to move the object along the z axis
+- `UP`, `DOWN`, `LEFT`, `RIGHT` to rotate the object
+- `T` to toggle between texture color modes
+- `F` for lines only
+- `U` for fill mode
+- `-+` to scale the object (use left shift for +)
+- To turn on the light, type `lumos`. Can you guess how to turn it off?
 
 
 

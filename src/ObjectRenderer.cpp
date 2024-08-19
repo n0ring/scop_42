@@ -41,7 +41,6 @@ ObjectRenderer::ObjectRenderer(const std::string& objectFileName, const unsigned
 
 	if (objectFileName != "res/models/elder.obj")
 	{
-		
 		m_shader->setUniformbuffer("Materials", m_UBO->getRendererId(), m_objId);
 	}
 	m_objectState = true;

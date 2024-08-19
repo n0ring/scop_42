@@ -39,23 +39,23 @@ layout(location = 0) out vec4 color;
 in vec4 v_ColorCoord;
 in vec2 TexCoord;
 
-in vec3 FragPos;    // Позиция фрагмента, интерполированная из вершинного шейдера
-in vec3 Normal;     // Нормаль фрагмента, интерполированная из вершинного шейдера
+in vec3 FragPos;
+in vec3 Normal;
 flat in float mtlIdx;
 
 struct Material {
-    vec3 ka;      // Ambient Color (12 байт + 4 байта для выравнивания)
-    float padding1; // 4 байта для выравнивания
-    vec3 kd;      // Diffuse Color (12 байт + 4 байта для выравнивания)
-    float padding2; // 4 байта для выравнивания
-    vec3 ke;      // Emissive Color (12 байт + 4 байта для выравнивания)
-    float padding3; // 4 байта для выравнивания
-    vec3 ks;      // Specular Color (12 байт + 4 байта для выравнивания)
+    vec3 ka;
+    float padding1;
+    vec3 kd;
+    float padding2;
+    vec3 ke;
+    float padding3;
+    vec3 ks;
 	float padding4;
-    float Ns;     // Specular Exponent (4 байта)
-    float ni;     // Optical Density (4 байта)
-    float d;      // Dissolve (Transparency) (4 байта)
-    float illum;  // Illumination Model (4 байта)
+    float Ns;
+    float ni;
+    float d;
+    float illum;
 };
 
 
